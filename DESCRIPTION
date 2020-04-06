@@ -1,0 +1,23 @@
+Package: MicrobeDataTools
+Title: Tools for Quality Control and formatting of microbial ‘omics data.
+Version: 0.0.1
+Authors@R: 
+	person("Maxime",
+		"Sweetlove",
+		role = c("aut", "cre"),
+		email = "msweetlove@naturalsciences.be")
+Description: 
+	MicrobeDataTools was developed by the NaTerra Royal Natural History Institute in Brussels to provide the 	scientific community an arsenal of tools to (1) quality control, (2) standardize and (3) format their data. 
+	MicrobeDataTools also includes (4) functions to easily retrieve open data from online sources, like sequences 	and environmental context data from the databases of the International Nucleotide Sequence Database Consortium 	(INSDC, which included SRA, GenBank, EMBL-ENA, DJJB,…)
+License: CC BY 4.0
+Encoding: UTF-8
+LazyData: true
+Depends:
+	xml2,
+	reshape2,
+	tidyr,
+	RecordLinkage,
+	mapview,
+	worrms,
+	rgbif,
+	stringr
