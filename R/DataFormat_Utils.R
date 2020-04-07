@@ -70,6 +70,65 @@ eMoF.to.wideTable <- function(dataset){
 
 }
 
+#' convert dataframe to a DarwinCore extended Measurement or Fact (eMoF) file
+#' @author Maxime Sweetlove ccBY 4.0 2020
+#' @description converts a dataframe to a DarwinCore extended Measurement Or Fact (eMOF) file
+#' @usage wideTable.to.eMoF(dataset)
+#' @param metadata.object a metadata.MIxS object
+#' @param variables a character vector. a list of the variables that need to be included in the eMoF
+#' @details 
+#' @return a data.frame formatted as an extended Measurement or Fact table
+#' @export
+wideTable.to.eMoF <- function(metadata.object, variables=NA){
+  ## converts a regular wide table to an extended Measurement of Fact table 
+  #requires tidyr
+  
+  # check input
+  if(!check.valid.metadata.MIxS(metadata.object)){
+    stop("invalid input")
+  }
+  bad.vars<-setdiff(variables, colnames(metadata.object@data))
+  if(length(bad.vars)>0){
+    stop(paste("The following variables were not present in the dataset: ", paste(bad.vars, collapse=", "), sep=""))
+  }
+  
+  #format the data
+  if("eventID" %in% colnames(metadata.object@data)){
+    dataset <- metadata.object@data[,c("eventID", variables)]
+  }else if("occurrenceID" %in% colnames(metadata.object@data)){
+    dataset <- metadata.object@data[,c("occurrenceID", variables)]
+  }else if("original_name" %in% colnames(metadata.object@data)){
+    dataset <- metadata.object@data[,c("original_name", variables)]
+    colnames(dataset)[1]<-"eventID"
+  }else{
+    stop("no valid samplenames found (eventID or occurrenceID)")
+  }
+  
+  data_long <- suppressWarnings(gather(dataset, measurementType, measurementValue, variables, factor_key=TRUE))
+  
+  # measurementUnit
+  if(length(metadata.object@units)>0){
+    data_long$measurementUnit <- data_long$measurementType
+    data_long$measurementUnit <- unname(sapply(data_long$measurementUnit, function(x){
+      gsub(x,metadata.object@units[names(metadata.object@units)==x],x)
+    }))
+  }
+  
+  # not yet included:
+  # measurementMethod
+  #measurementAccuracy
+  #measurementDeterminedDate
+  #measurementDeterminedBy
+  #measurementRemarks
+  #measurementID
+  #measurementTypeID
+  #measurementValueID
+  #measurementUnitID
+  
+  return(data_long)
+  
+}
+
 #' merge dataframes
 #' @author Maxime Sweetlove ccBY 4.0 2019
 #' @description combine.data.frame merges two dataframes, completing the rows and columns that are not shared by the dataframes.

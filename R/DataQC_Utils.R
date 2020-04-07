@@ -426,8 +426,9 @@ dataQC.TermsCheck <- function(observed=NA, exp.standard="MIxS", exp.section=NA, 
 #' @details This function will format the geographic coordinates of an event (in the fields decimalLatitude and decimalLongitude) into the WellKnownText format. For events that are at the lowest level of the hierarchy, it assumes a single point location. Higher level events are desribed by polygons based on the coordinates of the child events.
 #' @return a vector with a footprintWKT value for each row in the dataset
 #' @export
-dataQC.generate.footprintWKT <- function(dataset, NA.val=""){
+dataQC.generate.footprintWKT <- function(dataset, NA.val=NA){
   #requires mapview
+  #format POINT(lat lon)
   if(!"decimalLatitude" %in% colnames(dataset) |
      !"decimalLongitude" %in% colnames(dataset) |
      !"eventID" %in% colnames(dataset)){
@@ -441,7 +442,7 @@ dataQC.generate.footprintWKT <- function(dataset, NA.val=""){
         lat<-dataset[dataset$eventID==ev,]$decimalLatitude
         lon<-dataset[dataset$eventID==ev,]$decimalLongitude
         if(!is.na(lat) & !is.na(lon) & lat!="" & lon!=""){
-          footprintWKT_vec <- c(footprintWKT_vec, paste("POINT (", as.character(lat), " ", as.character(lon), ")", sep=""))
+          footprintWKT_vec <- c(footprintWKT_vec, paste("POINT(", as.character(lat), " ", as.character(lon), ")", sep=""))
         } else{
           footprintWKT_vec <- c(footprintWKT_vec, NA.val)
         }
@@ -477,12 +478,13 @@ dataQC.generate.footprintWKT <- function(dataset, NA.val=""){
       }
     }
   }else{
-    footprintWKT_vec <- paste("POINT (", as.character(dataset$decimalLatitude),
-                              ", ", as.character(dataset$decimalLongitude), ")",
+    footprintWKT_vec <- paste("POINT(", as.character(dataset$decimalLatitude),
+                              " ", as.character(dataset$decimalLongitude), ")",
                               sep="")
   }
 
-  footprintWKT_vec <- gsub("POINT (NA NA)", NA.val, footprintWKT_vec, fixed=TRUE)
+  footprintWKT_vec <- gsub("POINT(NA NA)", NA.val, footprintWKT_vec, fixed=TRUE)
+  footprintWKT_vec <- gsub("POINT( )", NA.val, footprintWKT_vec, fixed=TRUE)
   return(footprintWKT_vec)
 
 }
