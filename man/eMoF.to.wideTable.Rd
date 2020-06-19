@@ -18,6 +18,14 @@ converts a DarwinCore extended Measurement Or Fact (eMOF) file, which is has a "
 \details{
 Long formated data if great for data arciving, but is difficult to use in day-to-day statistical analyses. This function extracts the data from an eMoF file and puts it in a wide sample x variable table
 }
+\seealso{
+Other formating functions: 
+\code{\link{combine.data.frame}()},
+\code{\link{combine.data}()},
+\code{\link{wideTab.to.hierarchicalTab}()},
+\code{\link{wideTable.to.eMoF}()}
+}
 \author{
 Maxime Sweetlove ccBY 4.0 2020
 }
+\concept{formating functions}

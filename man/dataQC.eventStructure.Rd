@@ -30,6 +30,19 @@ checks if an eventID is present in a (QC'd) dataset, and generates one if not. D
 \details{
 An event structure is a hierarchical grouping of (sub-) samples (events, that is, something that occurs at a place and time) into higher parentEvents, like expeditions, projects,... This interlinked structure is for instance used in the DarwinCore Event standard. The algorithm here looks for specific columnames that may give an indication to the event structure (e.g. a column with sampe names, projects,...). If disered, the user can complete the event structure by rooting it into an over-arching project.
 }
+\seealso{
+Other quality control functions: 
+\code{\link{dataQC.LatitudeLongitudeCheck}()},
+\code{\link{dataQC.TaxonListFromData}()},
+\code{\link{dataQC.TermsCheck}()},
+\code{\link{dataQC.completeTaxaNamesFromRegistery}()},
+\code{\link{dataQC.dateCheck}()},
+\code{\link{dataQC.findNames}()},
+\code{\link{dataQC.generate.footprintWKT}()},
+\code{\link{dataQC.guess.env_package.from.data}()},
+\code{\link{dataQC.taxaNames}()}
+}
 \author{
 Maxime Sweetlove ccBY 4.0 2020
 }
+\concept{quality control functions}

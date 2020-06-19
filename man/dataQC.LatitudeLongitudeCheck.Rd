@@ -20,6 +20,19 @@ looks in the columns of a dataset (dataframe) for a column with coordinates and 
 \details{
 The date column is found based on a user-provided list of possible names to look for (latlon.colnames argument). First, a single column is searched where latitude and longitude are noted in a single field, if this returns no result, latitude and longitude are looked for in seperate fields. When found, the coordinates are transformed to decimals and returned as a single field, with values separated by a single space That is: (X Y), with X a numeric decimal latitude value and Y a numeric decimal longitude value.
 }
+\seealso{
+Other quality control functions: 
+\code{\link{dataQC.TaxonListFromData}()},
+\code{\link{dataQC.TermsCheck}()},
+\code{\link{dataQC.completeTaxaNamesFromRegistery}()},
+\code{\link{dataQC.dateCheck}()},
+\code{\link{dataQC.eventStructure}()},
+\code{\link{dataQC.findNames}()},
+\code{\link{dataQC.generate.footprintWKT}()},
+\code{\link{dataQC.guess.env_package.from.data}()},
+\code{\link{dataQC.taxaNames}()}
+}
 \author{
 Maxime Sweetlove CC-BY 4.0 2019
 }
+\concept{quality control functions}

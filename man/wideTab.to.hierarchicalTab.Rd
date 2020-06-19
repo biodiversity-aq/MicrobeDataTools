@@ -20,6 +20,14 @@ turns a regular wide table into a hierarchical recursive table.
 \details{
 Columns in the input data with different levels of a hierarchy are poolled into one column with values and a second column indicating the parent of the value.
 }
+\seealso{
+Other formating functions: 
+\code{\link{combine.data.frame}()},
+\code{\link{combine.data}()},
+\code{\link{eMoF.to.wideTable}()},
+\code{\link{wideTable.to.eMoF}()}
+}
 \author{
 Maxime Sweetlove CC-BY 4.0 2019
 }
+\concept{formating functions}

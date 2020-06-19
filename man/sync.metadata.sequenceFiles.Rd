@@ -4,12 +4,10 @@
 \alias{sync.metadata.sequenceFiles}
 \title{Check if all samples in a dataframe have sequence data}
 \usage{
-sync.metadata.sequenceFiles(Names, file.dir = NULL, paired = TRUE,
-  seq.file.extension = ".fastq.gz", pairedEnd.extension = c("_1",
-  "_2"))
+sync.metadata.sequenceFiles <- function(Names, file.dir=NULL, paired=TRUE, seq.file.extension=".fastq.gz", pairedEnd.extension=c("_1", "_2"))
 }
 \arguments{
-\item{Names}{a vector or a metadata.MIxS class object. A character vector with the sample names (without a file extension) or the metadata.MIxS object of which the sample names (original_name) should be compared to the sequence file names}
+\item{Names}{a vector or a MIxS.metadata class object. A character vector with the sample names (without a file extension) or the MIxS.metadata object of which the sample names (original_name) should be compared to the sequence file names}
 
 \item{file.dir}{a character string. The path to the directory where the sequence files are stored}
 
@@ -28,6 +26,15 @@ checks if all records in the metadata file match with filenames in a given direc
 \details{
 Nucleotide sequence datasets typically contain a large number of samples, too much to check manually. This function will check if all the names that are expected in the sequence data files are actually found. Reasons for mismatches may include typos, accedentally deleting files or records, errors in naming or copying files,...
 }
+\seealso{
+Other data archiving functions: 
+\code{\link{FileNames.to.Table}()},
+\code{\link{commonTax.to.NCBI.TaxID}()},
+\code{\link{get.ENAName}()},
+\code{\link{prep.metadata.ENA}()},
+\code{\link{renameSequenceFiles}()}
+}
 \author{
 Maxime Sweetlove ccBY 4.0 2020
 }
+\concept{data archiving functions}

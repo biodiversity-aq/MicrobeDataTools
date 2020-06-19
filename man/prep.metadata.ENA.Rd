@@ -4,14 +4,23 @@
 \alias{prep.metadata.ENA}
 \title{Formatting metadata and environmental data to upload to EMBL-ENA}
 \usage{
-prep.metadata.ENA(metadata, dest.dir = NULL, file.name = NULL,
-  sample_unique_name_prefix = NA, checklist_accession = NA,
-  tax_name = NA, ask.input = TRUE, insert.size = NA,
-  library.layout = NA, library.strategy = NA, library.selection = NA,
-  seq.file.extension = ".fastq.gz")
+prep.metadata.ENA(
+  metadata,
+  dest.dir = NULL,
+  file.name = NULL,
+  sample_unique_name_prefix = NA,
+  checklist_accession = NA,
+  tax_name = NA,
+  ask.input = TRUE,
+  insert.size = NA,
+  library.layout = NA,
+  library.strategy = NA,
+  library.selection = NA,
+  seq.file.extension = ".fastq.gz"
+)
 }
 \arguments{
-\item{metadata}{a metadata.MIxS class object. The object to be written as text file suited for submission to ENA.}
+\item{metadata}{a MIxS.metadata class object. The object to be written as text file suited for submission to ENA.}
 
 \item{dest.dir}{a character string. The file path to the directory where the output files must be written. If left blank files are written to the working directory.}
 
@@ -21,7 +30,7 @@ prep.metadata.ENA(metadata, dest.dir = NULL, file.name = NULL,
 
 \item{checklist_accession}{a character string. The name of a MIxS environmetal package or it's ENA checklist accession number.}
 
-\item{tax_name}{a character string. The scientific name of a taxon targeted in the data (applicable to all the samples). Same as "subspecf_gen_lin" or "scientific_name" in the metadata.MIxS input.}
+\item{tax_name}{a character string. The scientific name of a taxon targeted in the data (applicable to all the samples). Same as "subspecf_gen_lin" or "scientific_name" in the MIxS.metadata input.}
 
 \item{ask.input}{boolean. Whether or not to ask for user input to make decisions or solve problems that arise during the reformatting (e.g. missing data,...)}
 
@@ -44,6 +53,15 @@ converts metadata into the right format (a tab separated text file) to submit da
 \details{
 This function will reformat metadata for submission to ENA. Specifically made for ecological environmental studies (e.g. amplicon sequencing, shotgun metagenomics,...), with additional QCs build in for Antarctic and Southern Ocean data. The assumption is taken that the dataset has already been subjected a quality controll.
 }
+\seealso{
+Other data archiving functions: 
+\code{\link{FileNames.to.Table}()},
+\code{\link{commonTax.to.NCBI.TaxID}()},
+\code{\link{get.ENAName}()},
+\code{\link{renameSequenceFiles}()},
+\code{\link{sync.metadata.sequenceFiles}()}
+}
 \author{
 Maxime Sweetlove ccBY 4.0 2020
 }
+\concept{data archiving functions}

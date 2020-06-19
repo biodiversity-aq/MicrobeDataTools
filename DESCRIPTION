@@ -21,4 +21,4 @@ Depends:
 	worrms,
 	rgbif,
 	stringr
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0

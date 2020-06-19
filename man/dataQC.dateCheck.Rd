@@ -20,6 +20,19 @@ looks in the columns of a dataset for a column with dates and transforms them to
 \details{
 The date column is found based on a user-provided list of possible names to look for (data.colnames argument). If a columnname is found that corresponds to a term in the list, the dates will be convered to the YYYY-MM-DD format, if the original format can be recognized.
 }
+\seealso{
+Other quality control functions: 
+\code{\link{dataQC.LatitudeLongitudeCheck}()},
+\code{\link{dataQC.TaxonListFromData}()},
+\code{\link{dataQC.TermsCheck}()},
+\code{\link{dataQC.completeTaxaNamesFromRegistery}()},
+\code{\link{dataQC.eventStructure}()},
+\code{\link{dataQC.findNames}()},
+\code{\link{dataQC.generate.footprintWKT}()},
+\code{\link{dataQC.guess.env_package.from.data}()},
+\code{\link{dataQC.taxaNames}()}
+}
 \author{
 Maxime Sweetlove CC-BY 4.0 2019
 }
+\concept{quality control functions}

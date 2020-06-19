@@ -4,12 +4,12 @@
 \alias{dataQC.generate.footprintWKT}
 \title{generate a footprintWKT from coordinates}
 \usage{
-dataQC.generate.footprintWKT(dataset, NA.val="")
+dataQC.generate.footprintWKT(dataset, NA.val=NA)
 }
 \arguments{
 \item{dataset}{data.frame. A data.frame with Event data, formatted as a DarwinCore EventCore file. Must include decimalLatitude, decimalLongitude, eventID and parentEventID.}
 
-\item{NA.val}{character. What to fill in when there is no data. Default ""}
+\item{NA.val}{character. What to fill in when there is no data. Default NA}
 }
 \value{
 a vector with a footprintWKT value for each row in the dataset
@@ -20,6 +20,19 @@ generate a footprintWKT column for a dataset (preferably DarwinCore eventCore). 
 \details{
 This function will format the geographic coordinates of an event (in the fields decimalLatitude and decimalLongitude) into the WellKnownText format. For events that are at the lowest level of the hierarchy, it assumes a single point location. Higher level events are desribed by polygons based on the coordinates of the child events.
 }
+\seealso{
+Other quality control functions: 
+\code{\link{dataQC.LatitudeLongitudeCheck}()},
+\code{\link{dataQC.TaxonListFromData}()},
+\code{\link{dataQC.TermsCheck}()},
+\code{\link{dataQC.completeTaxaNamesFromRegistery}()},
+\code{\link{dataQC.dateCheck}()},
+\code{\link{dataQC.eventStructure}()},
+\code{\link{dataQC.findNames}()},
+\code{\link{dataQC.guess.env_package.from.data}()},
+\code{\link{dataQC.taxaNames}()}
+}
 \author{
 Maxime Sweetlove ccBY 4.0 2020
 }
+\concept{quality control functions}

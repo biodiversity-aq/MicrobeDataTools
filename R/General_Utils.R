@@ -30,6 +30,7 @@ multi.warnings <- function(message_text, warningmessages){
 
 #' Convert a taxon name to an NCBI taxon ID
 #' @author Maxime Sweetlove ccBY 4.0 2019
+#' @family data archiving functions
 #' @description converts taxon names of common taxa (superkingdom and phylum level) to it's NCBI taxID using an internal library. For taxa not in the internal library, please see https://www.ncbi.nlm.nih.gov/Taxonomy/TaxIdentifier/tax_identifier.cgi
 #' @param taxon character or character vector. The taxon names to be converted to NCBI tax IDs.
 #' @param fill.unknown character. The string to return when a taxon was not found in the list with common taxa. Default is NCBI:txid12908 (the ID for "unknown sequences"), other options include NA or ""
@@ -61,6 +62,7 @@ commonTax.to.NCBI.TaxID<-function(taxon, fill.unknown="12908"){
 }
 
 #' convert a MIxS term into it's ENA variant
+#' @family data archiving functions
 #' @author Maxime Sweetlove ccBY 4.0 2019
 #' @description get the ENA variant a MIxS term
 #' @param variable character a MIxS term.
@@ -77,6 +79,7 @@ get.ENAName <- function(variable){
 #' @param TermsList a character vector with the columnnames to look for. They will be handled in the order given, and the search will stop at the first match
 #' @details An internal function to find information in incomming data of which the format and content is unknown
 #' @return a character vactor with the content of the matching column (or the first match), or an empty vector
+#' @export
 find.dataset <- function(dataset, TermsList=c()){
 
   ctu<-TRUE
@@ -102,6 +105,7 @@ find.dataset <- function(dataset, TermsList=c()){
 
 #' convert a coordinate in degrees to decimal
 #' @author Maxime Sweetlove CC-BY 4.0 2019
+#' @family standardization functions
 #' @description Turns a latutude or longitude value in a degrees-minutes-seconds (DMS) format into a decimal value
 #' @usage degree.to.decimal(val)
 #' @param val a character string. A single latitude or longitude value to be transformed. Can include non-numeric character like the degree symbol, N-S-E-W wind directions,...
@@ -206,7 +210,7 @@ get.boundingBox<-function(latitudes, longitudes){
   E<-paste("East = ", max(longitudes))
   W<-paste("West = ", min(longitudes))
 
-  cat(paste(S, "\n", N, '\n\n', W, "\n", E, "\n", sep=""))
+  message(paste(S, "\n", N, '\n\n', W, "\n", E, "\n", sep=""))
   }
 
 #' Get the sequence length of the first sequence in a fastq or fastq.gz file
@@ -224,51 +228,6 @@ get.insertSize <- function(file_path=NA){
   return(insertSize)
 }
 
-#==============================================================
-# tools for getting help
-#==============================================================
-#' Find the MIxS or DarwinCore standard term and definition of a variable
-#' @author Maxime Sweetlove ccBY 4.0 2019
-#' @description retrieve the MIxS or DarwinCore standard term and definition of a variable.
-#' @param term a character string. The variable to look for among the MIxS and DarwinCore vocabularies
-#' @details Standerdizing microbial sequence data, metadata and environmental data can be quite difficult given the plethora of standard terms already in existance. This function returns a definition of any term that is used on the POLAAAR portal at biodiversity.aq.
-#' @return chracater string printed to the console. The best matching terms and their the definitions.
-#' @export
-term.definition <- function(term){
-  if(term %in% TermsLib$name){
-    def_out <- as.character(TermsLib[TermsLib$name==term,]$definition)
-    out_message <- paste(term, "\t\n", def_out)
-  }else{
-    potential_match <- c()
-    def_out <- c()
-    for(ls in TermsSyn){
-      if(grepl(term, ls)){
-        lst <- names(TermsSyn[ls[1]])
-        potential_match <- c(potential_match, lst)
-        def_out <- c(def_out, as.character(TermsLib[TermsLib$name==lst,]$definition))
-      }
-    }
-
-    if(length(potential_match)>1){
-      out_message <- paste("Multiple matches found for \"" , term, "\"\n\n",
-                           "\t", paste(c(1:length(potential_match)),
-                                       rep(". ",length(potential_match)),
-                                       potential_match,
-                                       rep(" :\n",length(potential_match)),
-                                       rep("\"",length(potential_match)),
-                                       def_out,
-                                       rep("\"",length(potential_match)),
-                                       collapse="\n\t", sep=""), sep="")
-    }else if(length(potential_match)==1){
-      out_message <- paste("Best match for \"" , term, "\"\n\n",
-                                 potential_match, "\n", def_out, sep="")
-    }else{
-      out_message <-  paste("Could not find any matches for \"" , term, "\"\n",sep="")
-    }
-  }
-  cat(out_message)
-
-}
 
 
 

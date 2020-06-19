@@ -18,6 +18,13 @@ Turns a latutude or longitude value in a degrees-minutes-seconds (DMS) format in
 \details{
 N-S-W-E wind directions as well as degrees, minutes and seconds are recognized and turned into a numeric decimal coordinate value
 }
+\seealso{
+Other standardization functions: 
+\code{\link{dataQC.DwC_general}()},
+\code{\link{dataQC.DwC}()},
+\code{\link{dataQC.MIxS}()}
+}
 \author{
 Maxime Sweetlove CC-BY 4.0 2019
 }
+\concept{standardization functions}

@@ -1,8 +1,4 @@
 #==============================================================
-# The MicrobeDataTools package
-#       MicrobeDataTools is a collection data management tools for microbial 'omics datasets.
-#       They allow to download, structure, quqlity-controll and standardize microbial datasets
-#==============================================================
 # Author Maxime Sweetlove
 # lisence CC 4.0
 # Part of the POLA3R website (successor or mARS.biodiversity.aq)
@@ -12,6 +8,7 @@
 #==============================================================
 
 #' convert a DarwinCore extended Measurement or Fact (eMoF) file to a wide tabular format
+#' @family formating functions
 #' @author Maxime Sweetlove ccBY 4.0 2020
 #' @description converts a DarwinCore extended Measurement Or Fact (eMOF) file, which is has a "long" file format into a wide tabular format
 #' @usage eMoF.to.wideTable(dataset)
@@ -71,12 +68,13 @@ eMoF.to.wideTable <- function(dataset){
 }
 
 #' convert dataframe to a DarwinCore extended Measurement or Fact (eMoF) file
+#' @family formating functions
 #' @author Maxime Sweetlove ccBY 4.0 2020
 #' @description converts a dataframe to a DarwinCore extended Measurement Or Fact (eMOF) file
 #' @usage wideTable.to.eMoF(dataset)
-#' @param metadata.object a metadata.MIxS object
+#' @param metadata.object a MIxS.metadata object
 #' @param variables a character vector. a list of the variables that need to be included in the eMoF
-#' @details 
+#' @details extended Measurement or Fact (eMoF) as a DarwinCore extension to standardize environmental or other additional data in a computer readable fashon. This standard structures data into a long format (a column with sample name, variable name and value). This function converts more commonly used wide format tables (that is, structured like a matrix, e.g. samples as rows and variables as columns) into the correct long format that complies to eMoF
 #' @return a data.frame formatted as an extended Measurement or Fact table
 #' @export
 wideTable.to.eMoF <- function(metadata.object, variables=NA){
@@ -84,7 +82,7 @@ wideTable.to.eMoF <- function(metadata.object, variables=NA){
   #requires tidyr
   
   # check input
-  if(!check.valid.metadata.MIxS(metadata.object)){
+  if(!check.valid.MIxS.metadata(metadata.object)){
     stop("invalid input")
   }
   bad.vars<-setdiff(variables, colnames(metadata.object@data))
@@ -131,31 +129,28 @@ wideTable.to.eMoF <- function(metadata.object, variables=NA){
 
 #' merge dataframes
 #' @author Maxime Sweetlove ccBY 4.0 2019
+#' @family formating functions
 #' @description combine.data.frame merges two dataframes, completing the rows and columns that are not shared by the dataframes.
 #' @usage combine.data.frame(df1, df2, fill=NA, merge.cols=TRUE)
 #' @param df1 a dataframe
 #' @param df2 a dataframe
 #' @param fill character or NA. A value to put into the cells that have no data. Default NA
-#' @param merge.cols boolean. Merge colomns with common name. Default TRUE
+#' @param merge.cols logical. Merge colomns with common name. Default TRUE
+#' @param original_rowName.col logical. if TRUE, add a column with the original rownames. Default TRUE
+#' @param merge.rows character. If the data.frames df1 and df2 have common rows, the values for these rows of this dataset must be kept in favor of the other. If NA, both rows will be kept. Either "df1", "df2" or NA. Default "df1"
 #' @details Columns with matching names can or cannot be merged, rows are automatically bound (a wrapper of rbind), not merged. Any missing data as a result of the non-matchng columns will be filled by the fill argument.
-#' @example
-#' > df1 <- data.frame(col1=c(9,7,5), col2=c("ts",4,3))
-#' > df2 <- data.frame(col2=c(8,6), col3=c(8,7))
-#' > combine.data.frame(df1, df2, fill=NA, merge.cols=TRUE, merge.by="rownames)
-#'     col1 col2 rowNames col3
-#'1     9    ts        1   NA
-#'2     7    4        2   NA
-#'3     5    3        3   NA
-#'11   NA    8        1    8
-#'21   NA    6        2    7
 #' @return a data.frame
 #' @export
-combine.data.frame <- function(df1, df2, fill=NA, merge.cols=TRUE){
+combine.data.frame <- function(df1, df2, fill=NA, 
+                               merge.cols=TRUE, original_rowName.col=TRUE, merge.rows="df1"){
   if(!class(df1) %in% c("data.frame", "matrix") |
      !class(df2) %in% c("data.frame", "matrix") |
      ncol(df1) == 0 | nrow(df1) == 0 |
      ncol(df2) == 0 | nrow(df2) == 0){
     stop("invalid input, must be a dataframe of matrix with at leaste 1 column and row.")
+  }
+  if(!length(merge.rows)==1 && !merge.rows %in% c("df1", "df2", NA)){
+    stop("incorrect value for parameter \"merge.rows\". Must be either \"df1\", \"df2\" or NA")
   }
   for(nc in 1:ncol(df1)){ #merging columns with factors is always trouble, so convert to character
     if(class(df1[,nc])=="factor"){
@@ -181,16 +176,25 @@ combine.data.frame <- function(df1, df2, fill=NA, merge.cols=TRUE){
       shared_cols <- c()
     }
   }
+  
   shared_rows <- intersect(rownames(df1), rownames(df2))
+  if(length(shared_rows)>0){
+    if(merge.rows=="df1"){
+      df2<-df2[!rownames(df2) %in% shared_rows,]
+      df22<-df22[!rownames(df22) %in% shared_rows,]
+    }else if(merge.rows=="df2"){
+      df1<-df1[!rownames(df1) %in% shared_rows,]
+      df11<-df11[!rownames(df11) %in% shared_rows,]
+    }
+  }
 
   if(merge.cols){
-    if(length(shared_rows)>0){ #new column with original rownames
+    if(length(shared_rows)>0 & original_rowName.col){
       df1$original_rowName <- row.names(df1)
       df2$original_rowName <- row.names(df2)
       shared_cols<-c(shared_cols, "original_rowName")
     }
-
-    if(!ncol(df22)==0){ #if ncol(df22)==0, then df2 has no other colnames than df1
+    if(!ncol(df22)==0 && !nrow(df22)==0){ #if ncol(df22)==0, then df2 has no other colnames than df1
       df_UpRight <- data.frame(matrix(nrow = nrow(df1), ncol = ncol(df22), data=fill))
       colnames(df_UpRight) <- colnames(df22)
       rownames(df_UpRight) <- rownames(df1)
@@ -198,7 +202,7 @@ combine.data.frame <- function(df1, df2, fill=NA, merge.cols=TRUE){
     }else{
       df1_b <- df1
     }
-    if(!ncol(df11)==0){
+    if(!ncol(df11)==0 & !nrow(df11)==0){
       df11 <- df1[,!colnames(df1) %in% shared_cols, drop=FALSE]
       df_DownLeft <- data.frame(matrix(nrow = nrow(df2), ncol = ncol(df11), data=fill))
       rownames(df_DownLeft) <- rownames(df2)
@@ -212,7 +216,7 @@ combine.data.frame <- function(df1, df2, fill=NA, merge.cols=TRUE){
     colnames(df_out)<-colnames(df1_b)
 
     df_out[c((nrow(df1_b)+1):(nrow(df_out))),shared_cols]<-df2[,shared_cols, drop=FALSE]
-  }else{
+  }else{ #not merging columns
     if(length(setdiff(rownames(df1), shared_rows))>0){
       df_x <- data.frame(matrix(nrow = nrow(df1)-length(shared_rows), ncol = ncol(df22), data=fill))
       colnames(df_x) <- colnames(df22)
@@ -238,16 +242,17 @@ combine.data.frame <- function(df1, df2, fill=NA, merge.cols=TRUE){
   return(df_out)
 }
 
-#' merge metadata.MIxS objects
+#' merge MIxS.metadata objects
 #' @author Maxime Sweetlove ccBY 4.0 2019
-#' @description combine.data combines two metadata.MIxS objects into one, merging all common variables (columns as default).
+#' @family formating functions
+#' @description combine.data combines two MIxS.metadata objects into one, merging all common variables (columns as default).
 #' @usage combine.data(d1, d2, fill=NA, variables.as.cols=TRUE)
-#' @param d1 a metadata.MIxS object
-#' @param d2 a metadata.MIxS object
+#' @param d1 a MIxS.metadata object
+#' @param d2 a MIxS.metadata object
 #' @param fill character or NA. A value to put into the cells that have no data.
 #' @param variables.as.cols boolean. If TRUE, the input data is assumed to have rows as samples and variables/parameters as columns. If FALSE the data is formatted the other was around. default TRUE
 #' @details Variables with matching names are merged, if variables.as.cols=TRUE this means columns are merged, if FALSE rows are merged. Any missing data as a result of the non-matchng variable-name will be filled by the fill argument.
-#' @return a metadata.MIxS object
+#' @return a MIxS.metadata object
 #' @export
 combine.data <- function(d1, d2, fill=NA, variables.as.cols=TRUE){
   if(class(d1) %in% c("data.frame", "matrix") &
@@ -264,17 +269,17 @@ combine.data <- function(d1, d2, fill=NA, variables.as.cols=TRUE){
       df1<-data.frame(t(d1))
       df2<-data.frame(t(d2))
     }
-  } else if(check.valid.metadata.MIxS(d1) & check.valid.metadata.MIxS(d2)){
-    class_out <- "metadata.MIxS"
+  } else if(check.valid.MIxS.metadata(d1) & check.valid.MIxS.metadata(d2)){
+    class_out <- "MIxS.metadata"
     variables.as.cols<-TRUE
     df1<-d1@data
     df2<-d2@data
   } else{
-    stop("invalid input, both datasets must be a dataframe, matrix or metadata.MIxS class object.
+    stop("invalid input, both datasets must be a dataframe, matrix or MIxS.metadata class object.
          possible causes of this error include:
-         - a dataframe/matrix or metadata.MIxS@data object had 0 columns or rows.
+         - a dataframe/matrix or MIxS.metadata@data object had 0 columns or rows.
          - the two input dataset differed in their object class.
-         - the metadata.MIxS object was invalid.")
+         - the MIxS.metadata object was invalid.")
   }
 
   for(nc in 1:ncol(df1)){ #merging columns with factors is always trouble, so convert to character
@@ -326,7 +331,7 @@ combine.data <- function(d1, d2, fill=NA, variables.as.cols=TRUE){
     df_out <- data.frame(t(df_out))
   }
 
-  if(class_out=="metadata.MIxS"){
+  if(class_out=="MIxS.metadata"){
     df_units <- c()
     df_section <- c()
     for(cname in colnames(df_out)){
@@ -365,7 +370,7 @@ combine.data <- function(d1, d2, fill=NA, variables.as.cols=TRUE){
       df_env<-"multiple_packages"
     }
 
-    df_out <- new("metadata.MIxS",
+    df_out <- new("MIxS.metadata",
                   data = df_out,
                   units = df_units,
                   section = df_section,
@@ -380,15 +385,12 @@ combine.data <- function(d1, d2, fill=NA, variables.as.cols=TRUE){
 
 #' convert a wide table to hierarchical table
 #' @author Maxime Sweetlove CC-BY 4.0 2019
+#' @family formating functions
 #' @description turns a regular wide table into a hierarchical recursive table.
 #' @param dataset a data.frame. The wide table to be transformed, with columns as hierarchical variables. T
 #' @param col_hierarchy a data.frame with two columns named "child" and "parent". The hierarchical relations between the columns formatted in a child-parent table listing the column names. Use "root" of NA for columns with nu perent.
 #' @usage wideTab.to.hierarchicalTab(dataset, col_hierarchy)
 #' @details Columns in the input data with different levels of a hierarchy are poolled into one column with values and a second column indicating the parent of the value.
-#' @example
-#' Table <- data.frame(children=c("Agust", "Benny"), their_parents=c("Bernadette", "Rosa"), and_their_grandparents=c("Odille", "Jean-Pierre"))
-#' TabHierarch <- data.frame(child=c("children", "their_parents", "and_their_grandparents"), parent=c("their_parents", "and_their_grandparents", "root"))
-#' wideTab.to.hierarchicalTab(Table, TabHierarch)
 #' @return a data.frame with three columns: one for the value (cell content in the origical data.frame), it's rank (the original column name), and parent (cell content of the column that is one up in the hierarchy)
 #' @export
 wideTab.to.hierarchicalTab <- function(dataset, col_hierarchy){

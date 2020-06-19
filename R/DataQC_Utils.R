@@ -1,8 +1,4 @@
 #==============================================================
-# The MicrobeDataTools package
-#       MicrobeDataTools is a collection data management tools for microbial 'omics datasets.
-#       They allow to download, structure, quqlity-controll and standardize microbial datasets
-#==============================================================
 # Author Maxime Sweetlove
 # lisence CC 4.0
 # Part of the POLA3R website (successor or mARS.biodiversity.aq)
@@ -14,6 +10,7 @@
 #==============================================================
 #' find and standardize dates in a dataframe
 #' @author Maxime Sweetlove CC-BY 4.0 2019
+#' @family quality control functions
 #' @description looks in the columns of a dataset for a column with dates and transforms them to the YYYY-MM-DD format.
 #' @usage dataQC.dateCheck(dataset, date.colnames)
 #' @param dataset dataframe. The dataset where the date column should be found
@@ -81,18 +78,19 @@ dataQC.dateCheck <- function(dataset, date.colnames=c("date", "Date", "collectio
         }
       }else{
         warningmessages <- multi.warnings("some collection dates are unknown", warningmessages)
-        date_values[i] <- ""
+        date_values[i] <- NA
       }
     }
   }else{
     warningmessages <- multi.warnings("no collection dates found", warningmessages)
-    date_values <- rep("", nrow(dataset))
+    date_values <- rep(NA, nrow(dataset))
   }
   return(list(values=date_values, warningmessages=warningmessages))
 }
 
 #' find and standardize geographic coordinates in a dataframe
 #' @author Maxime Sweetlove CC-BY 4.0 2019
+#' @family quality control functions
 #' @description looks in the columns of a dataset (dataframe) for a column with coordinates and transforms them a standardized decimal format (see details).
 #' @usage dataQC.LatitudeLongitudeCheck(dataset, latlon.colnames)
 #' @param dataset dataframe. The dataset where the date column should be found
@@ -146,7 +144,7 @@ dataQC.LatitudeLongitudeCheck <- function(dataset, latlon.colnames=list(c("lat_l
         #weed out the NAs
         if(length(latlon_val)==1){#is the lat_lon is still not split, it must be NA
           if(is.na(latlon_val) | latlon_val %in% NAvals){
-            lat_space_lon_output<-c(lat_space_lon_output, "")
+            lat_space_lon_output<-c(lat_space_lon_output, NA)
             warningmessages <- multi.warnings("there are unknowns in the coordinates", warningmessages)
           }else{
             warningmessages <- multi.warnings("for some coordinates, the format could not be recognized", warningmessages)
@@ -168,7 +166,7 @@ dataQC.LatitudeLongitudeCheck <- function(dataset, latlon.colnames=list(c("lat_l
           lat_space_lon_output<-c(lat_space_lon_output, paste(lat, lon))
         }
       }else{
-        lat_space_lon_output<-c(lat_space_lon_output, "")
+        lat_space_lon_output<-c(lat_space_lon_output, NA)
         warningmessages <- multi.warnings("there are unknowns in the coordinates", warningmessages)
       }
     }
@@ -188,7 +186,7 @@ dataQC.LatitudeLongitudeCheck <- function(dataset, latlon.colnames=list(c("lat_l
 
         if(is.na(lat) | lat %in% NAvals | is.na(lon) | lon %in% NAvals){
           warningmessages <- multi.warnings("there are NAs in the coordinates", warningmessages)
-          lat_space_lon_output<-c(lat_space_lon_output, "")
+          lat_space_lon_output<-c(lat_space_lon_output, NA)
         }else{
           lat <- coordinate.to.decimal(lat)
           lon <- coordinate.to.decimal(lon)
@@ -197,17 +195,18 @@ dataQC.LatitudeLongitudeCheck <- function(dataset, latlon.colnames=list(c("lat_l
       }
     }else{
       warningmessages <- multi.warnings("the length of the latitude and longitude columns do not match, process not executed", warningmessages)
-      lat_space_lon_output<-c(lat_space_lon_output, "")
+      lat_space_lon_output<-c(lat_space_lon_output, NA)
     }
   }else{ #case 3: no latitude and longitude data found
     warningmessages <- multi.warnings("no latitude longitudes found", warningmessages)
-    lat_space_lon_output<-""
+    lat_space_lon_output<-NA
   }
   return(list(values=lat_space_lon_output, warningmessages=warningmessages))
 }
 
 #' make an educated guess to the MIxS environmental package of a dataset
 #' @author Maxime Sweetlove CC-BY 4.0 2019
+#' @family quality control functions
 #' @description looks in the columns of a dataset for clues to what the most appropriate MIxS environmental could be for each sample.
 #' @usage dataQC.guess.env_package.from.data(dataset, pckge.colnames=c("env_package", "ScientificName"))
 #' @param dataset dataframe. The dataset for which the MIxS environmental package should be found or guessed
@@ -292,6 +291,7 @@ dataQC.guess.env_package.from.data <- function(dataset, pckge.colnames=c("env_pa
 
 #' make variable names in a dataset to comply to a standrad
 #' @author Maxime Sweetlove ccBY 4.0 2020
+#' @family quality control functions
 #' @description checks a set of terms (e.g. columnnames) to a Standard, and flags inconsistencies, gives solutions if possible.
 #' @usage Check.terms(observed, exp.standard="MIxS", exp.section=NA, fuzzy.match=TRUE, out.type="full")
 #' @param observed character vector. The terms to be checked
@@ -419,10 +419,11 @@ dataQC.TermsCheck <- function(observed=NA, exp.standard="MIxS", exp.section=NA, 
 
 #' generate a footprintWKT from coordinates
 #' @author Maxime Sweetlove ccBY 4.0 2020
+#' @family quality control functions
 #' @description generate a footprintWKT column for a dataset (preferably DarwinCore eventCore). Lowest level events must be point locations.
 #' @param dataset data.frame. A data.frame with Event data, formatted as a DarwinCore EventCore file. Must include decimalLatitude, decimalLongitude, eventID and parentEventID.
-#' @param NA.val character. What to fill in when there is no data. Default ""
-#' @usage dataQC.generate.footprintWKT(dataset, NA.val="")
+#' @param NA.val character. What to fill in when there is no data. Default NA
+#' @usage dataQC.generate.footprintWKT(dataset, NA.val=NA)
 #' @details This function will format the geographic coordinates of an event (in the fields decimalLatitude and decimalLongitude) into the WellKnownText format. For events that are at the lowest level of the hierarchy, it assumes a single point location. Higher level events are desribed by polygons based on the coordinates of the child events.
 #' @return a vector with a footprintWKT value for each row in the dataset
 #' @export
@@ -491,6 +492,7 @@ dataQC.generate.footprintWKT <- function(dataset, NA.val=NA){
 
 #' find the samplenames in a dataset
 #' @author Maxime Sweetlove ccBY 4.0 2020
+#' @family quality control functions
 #' @description find the sample names in a given (meta-)dataset where at least an attempt has been made to standardize the data following MIxS or DarwinCore
 #' @param dataset data.frame. The data.frame where to look for the sample names
 #' @param ask.input logical. If TRUE, console input will be requested to the user when a problem occurs. Default TRUE
@@ -499,11 +501,8 @@ dataQC.generate.footprintWKT <- function(dataset, NA.val=NA){
 #' @details It is often not clear where the sample names are in a dataset. This function makes an educated guess, based on rownames or tags that are often used to indicate sample names. If ask.input, then the process happens user-supervised.
 #' @export
 dataQC.findNames <- function(dataset = NA, ask.input=TRUE){
-  orig_names <- data.frame(original_names = rep("", nrow(dataset)),
-                           eventID = rep("", nrow(dataset)),
-                           parentEventID = rep("", nrow(dataset)),
-                           occurrenceID = rep("", nrow(dataset)),
-                           INSDC_SampleID = rep("", nrow(dataset)))
+  orig_names <- data.frame(matrix(data=NA, ncol=5, nrow=nrow(dataset)))
+  colnames(orig_names)<-c("original_names", "eventID", "parentEventID", "occurrenceID", "INSDC_SampleID")
   rownames(orig_names) <- rownames(dataset)
   warningmessages <- ""
   item_shared <- intersect(TermsSyn["original_name"][[1]], tolower(colnames(dataset)))
@@ -511,8 +510,11 @@ dataQC.findNames <- function(dataset = NA, ask.input=TRUE){
     likely_sampNames <- item_shared[1] #order of item_shared is in decreasing likelyness
     likely_sampNames_orig <- colnames(dataset)[tolower(colnames(dataset))==likely_sampNames]
     if(ask.input){
-      cat(paste("The original sample names could be in the \"",likely_sampNames_orig,"\" column.\n", sep=""))
-      cat(paste("\tThe first five names in this column are ", paste(dataset[1:5,tolower(colnames(dataset))==likely_sampNames], collapse="; "), " ...\n\tDoes this seems correct? (y/n)\n", sep=""))
+      message(paste("The original sample names could be in the \"",likely_sampNames_orig,"\" column.\n", 
+                    "\tThe first five names in this column are:\n\t\t", 
+                    paste(dataset[1:5,tolower(colnames(dataset))==likely_sampNames], collapse="\n\t\t"), 
+                    " ...\n\tDoes this seems correct? (y/n)\n",
+                    sep=""))
       doNext <- readline()
       if(tolower(doNext) %in% c("y", "yes")){
         orig_names$original_names <- as.character(dataset[,tolower(colnames(dataset))==likely_sampNames])
@@ -528,13 +530,17 @@ dataQC.findNames <- function(dataset = NA, ask.input=TRUE){
     likely_sampNames_orig <- NA
     if(.row_names_info(dataset)>0){#rownames provided by the user might be the original names
       if(ask.input){
-        cat("No original sample names found...\n\tuse the rownames instead? (y/n)\n")
+        message(paste("No original sample names found...\n\tthe rownames can be used as an alternative.\n", 
+                      "\tThe first five names are:\n\t\t", 
+                      paste(row.names(dataset)[1:5], collapse="\n\t\t"), 
+                      " ...\n\tuse rownames as sample names? (y/n)\n",
+                      sep=""))
         doNext <- readline()
         if(tolower(doNext) %in% c("y", "yes")){
           orig_names$original_names <- row.names(dataset)
           warningmessages <- "no original sample names found, used the rownames instead"
         }else if(tolower(doNext) %in% c("n","no")){
-          cat("you chose no.\n\t Can you give the columnname with the original sample names instead? Leave blank and hit enter to ignore\n")
+          message("you chose no.\n\t Can you give the columnname with the original sample names instead? Leave blank and hit enter to ignore\n")
           doNext2 <- readline()
           if(doNext2!=""){
             if (doNext2 %in% colnames(dataset)){
@@ -571,10 +577,12 @@ dataQC.findNames <- function(dataset = NA, ask.input=TRUE){
 
 #' extract the finest resolution taxonomy from a dataset
 #' @author Maxime Sweetlove CC-BY 4.0 2020
+#' @family quality control functions
 #' @description tries to find taxonomic names for samples (rows) in a dataset (data.frame),
 #' @usage find.sampleTaxon(dataset)
 #' @param dataset a data.frame. The dataset with samples as rows, and taxonomy information in the columns. using the MIxS or DarwinCore taxonomy terms, the taxonomy information will be extracted
 #' @return a vector with the highest level taxonomic name found, with genus and species epithet separated by a space.
+#' @export
 dataQC.TaxonListFromData <- function(dataset){
   taxaTerms<-c("specificEpithet", "subgenus", "genus", "family",
                "order","class","phylum","kingdom", "domain")
@@ -586,7 +594,7 @@ dataQC.TaxonListFromData <- function(dataset){
     # 2. try scientificName (for DwC data)
     taxaNames<-dataset$scientificName
   }else{
-    # 3. look for thetaxonomy columns and try to get a name frome there
+    # 3. look for the taxonomy columns and try to get a name frome there
     if("genus" %in% rankNames){
       if("specificEpithet" %in% rankNames){
         taxaNames <- paste(dataset$genus, dataset$specificEpithet, sep=" ")
@@ -594,16 +602,16 @@ dataQC.TaxonListFromData <- function(dataset){
         taxaNames <- DwC.data$genus
       }
     }else{
-      taxaNames <- rep("", nrow(dataset))
+      taxaNames <- rep(NA, nrow(dataset))
     }
   }
-  #standardize all unknown values to be ""
+  #standardize all unknown values to be NA
   taxaNames <- as.character(taxaNames)
-  taxaNames[is.na(taxaNames)]<-""
-  taxaNames[taxaNames=="NA"]<-""
+  taxaNames[taxaNames=="NA"]<-NA
+  taxaNames[taxaNames==""]<-NA
 
   for(tx in 1:length(taxaNames)){
-    if(taxaNames[tx]==""){
+    if(is.na(taxaNames[tx])){
       # means both genus and species names were unknown
       tx_i=1
       while(tx_i<(length(rankNames)+1)){
@@ -624,6 +632,7 @@ dataQC.TaxonListFromData <- function(dataset){
 
 #' perform a quality control onf taxonomic names
 #' @author Maxime Sweetlove CC-BY 4.0 2020
+#' @family quality control functions
 #' @description checks a list of taxonomic names, and perform a basic quality control
 #' @usage dataQC.taxaNames(taxaNames)
 #' @param taxaNames character vector. a list of scientific taxonomic names
@@ -631,7 +640,7 @@ dataQC.TaxonListFromData <- function(dataset){
 #' @return a vector with the checked taxon names
 #' @export
 dataQC.taxaNames <- function(taxaNames){
-  taxaNamesQC <- data.frame(matrix(data="", ncol=3, nrow=length(taxaNames)), stringsAsFactors = FALSE)
+  taxaNamesQC <- data.frame(matrix(data=NA, ncol=3, nrow=length(taxaNames)), stringsAsFactors = FALSE)
   colnames(taxaNamesQC) <- c("speciesLevelName", "scientificName", "identificationQualifier")
 
   for(tx in 1:length(taxaNames)){
@@ -669,6 +678,7 @@ dataQC.taxaNames <- function(taxaNames){
 
 #' Complete a list of taxonomic names with information form an authorotive taxonomic backbone
 #' @author Maxime Sweetlove CC-BY 4.0 2020
+#' @family quality control functions
 #' @description complete a list of taxonomic names by looking-up missing information on an accepted taxonomic registery
 #' @param taxaNames a character vector. A list with the taxonomic names to look for
 #' @param taxBackbone a character string. The taxonomic backbone to querry. Either "worms" or "gbif"
@@ -691,11 +701,11 @@ dataQC.completeTaxaNamesFromRegistery <- function(taxaNames, taxBackbone="worms"
         taxid <- tryCatch({
           tx <- worrms::wm_name2id(taxon)
         }, error = function(e){
-          tx <- ""
+          tx <- NA
         }
         )
 
-        if(taxid != ""){
+        if(!is.na(taxid)){
           taxnum <- taxid
           taxid<-paste("urn:lsid:marinespecies.org:taxname:", taxid, sep="")
           taxdata <- data.frame(worrms::wm_record(taxnum))
@@ -737,7 +747,7 @@ dataQC.completeTaxaNamesFromRegistery <- function(taxaNames, taxBackbone="worms"
         taxid <- tryCatch({
           tx <- rgbif::name_backbone(name="taxon")
         }, error = function(e){
-          tx <- ""
+          tx <- NA
         }
         )
       }
@@ -748,14 +758,13 @@ dataQC.completeTaxaNamesFromRegistery <- function(taxaNames, taxBackbone="worms"
     stop("invalid taxBackbone argument")
   }
 
-
-  taxid_key[is.na(taxid_key)]<-""
   return(taxid_key)
 }
 
 
 #' check a dataset for an event-structure
 #' @author Maxime Sweetlove ccBY 4.0 2020
+#' @family quality control functions
 #' @description checks if an eventID is present in a (QC'd) dataset, and generates one if not. Does the same of parentEventID if check.parentEventID is TRUE, and check the hierarchical relationships between eventID and parentEventID
 #' @param dataset data.frame. The dataset for which the event structure should be checked
 #' @param eventID.col character. The column where the names of the events are given. Default eventID. If NA, and event.prefix must be provided to be able to create unique eventIDs
@@ -768,7 +777,6 @@ dataQC.completeTaxaNamesFromRegistery <- function(taxaNames, taxBackbone="worms"
 #' @details An event structure is a hierarchical grouping of (sub-) samples (events, that is, something that occurs at a place and time) into higher parentEvents, like expeditions, projects,... This interlinked structure is for instance used in the DarwinCore Event standard. The algorithm here looks for specific columnames that may give an indication to the event structure (e.g. a column with sampe names, projects,...). If disered, the user can complete the event structure by rooting it into an over-arching project.
 #' @return a dataframe with 2 columns: eventID and parentEventID
 #' @export
-#' . May be a global unique identifier or an identifier specific to the data set.
 dataQC.eventStructure <- function(dataset, eventID.col = "eventID", parentEventID.col = NA,
                                   project.col = NA, project = NA, event.prefix = NA,
                                   complete.hierarchy=FALSE){
@@ -848,18 +856,18 @@ dataQC.eventStructure <- function(dataset, eventID.col = "eventID", parentEventI
     if(!all(parentEvents %in% eventTable$eventID)){
       # not all parentEvents are in the event column
       for(pi in 1:length(parentEvents)){
-        if(!parentEvents[pi] %in% eventTable$eventID){
+        if(!parentEvents[pi] %in% eventTable$eventID & !is.na(parentEvents[pi])){
           if(!is.na(project.col) & !is.na(parentEventID.col)){
             # add the (true) parentEvents and their projects
             prj <- eventTable[eventTable$parentEventID==parentEvents[pi],]$project
-            eventTable <- rbind(data.frame(original_name="", eventID=parentEvents[pi],
+            eventTable <- rbind(data.frame(original_name=NA, eventID=parentEvents[pi],
                                            parentEventID=prj, project=prj, type="parentEvent",
                                            original=FALSE, stringsAsFactors = FALSE),
                                 eventTable)
           }else if(!is.na(project.col) & is.na(parentEventID.col)){
             # add the parentEvents, but the are the same as the projects
-            eventTable <- rbind(data.frame(original_name="", eventID=parentEvents[pi],
-                                           parentEventID="", project=parentEvents[pi], type="project",
+            eventTable <- rbind(data.frame(original_name=NA, eventID=parentEvents[pi],
+                                           parentEventID=NA, project=parentEvents[pi], type="project",
                                            original=FALSE, stringsAsFactors = FALSE),
                                 eventTable)
           }else{
@@ -869,6 +877,7 @@ dataQC.eventStructure <- function(dataset, eventID.col = "eventID", parentEventI
                                            original=FALSE, stringsAsFactors = FALSE),
                                 eventTable)
           }
+          
           rownames(eventTable)[1]<-parentEvents[pi]
         }
       }
@@ -878,32 +887,33 @@ dataQC.eventStructure <- function(dataset, eventID.col = "eventID", parentEventI
     # else=> don't change anything about the parentEvents anymore.
     if(!is.na(project.col)){
       projects<-as.character(unique(eventTable$project))
-      if(length(projects)==1){
-        if(!projects %in% unique(eventTable$parentEventID)){
-          eventTable[eventTable$parentEventID=="",]$parentEventID <- projects
-        }else{
-          for(pri in 1:nrow(eventTable)){
-            if(eventTable[pri,]$parentEventID=="" & eventTable[pri,]$eventID!=projects){
-              eventTable[pri,]$parentEventID <- projects
+      if(!all(is.na(projects))){
+        if(length(projects)==1){
+          if(!projects %in% unique(eventTable$parentEventID)){
+            eventTable[eventTable$parentEventID=="",]$parentEventID <- projects
+          }else{
+            for(pri in 1:nrow(eventTable)){
+              if(eventTable[pri,]$parentEventID=="" & eventTable[pri,]$eventID!=projects){
+                eventTable[pri,]$parentEventID <- projects
+              }
             }
           }
         }
-      }
-
-      if(!all(projects %in% eventTable$eventID)){
-        # add the projects as events
-        for(pi in 1:length(projects)){
-          if(!projects[pi] %in% eventTable$eventID){
-            eventTable <- rbind(data.frame(original_name="", eventID=projects[pi],
-                                           parentEventID="", project="", type="project",
-                                           original=FALSE, stringsAsFactors = FALSE),
-                                eventTable)
-            rownames(eventTable)[1]<-projects[pi]
+        if(!all(projects %in% eventTable$eventID)){
+          # add the projects as events
+          for(pi in 1:length(projects)){
+            if(!projects[pi] %in% eventTable$eventID){
+              eventTable <- rbind(data.frame(original_name=NA, eventID=projects[pi],
+                                             parentEventID=NA, project="", type="project",
+                                             original=FALSE, stringsAsFactors = FALSE),
+                                  eventTable)
+              rownames(eventTable)[1]<-projects[pi]
+            }
           }
+        }else{
+          # make sure projects as events have no parentEvent
+          eventTable[eventTable$eventID %in% projects,]$parentEventID <- NA
         }
-      }else{
-        # make sure projects as events have no parentEvent
-        eventTable[eventTable$eventID %in% projects,]$parentEventID <- ""
       }
     }
   }

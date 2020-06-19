@@ -26,6 +26,19 @@ checks a set of terms (e.g. columnnames) to a Standard, and flags inconsistencie
 \details{
 For interoperability of data and data archiving, variable names in datasets need to comply to vocabulary standards. This function compares a list of existing terms to the MIxS or DwC standard, and tries to fiend the best matches.
 }
+\seealso{
+Other quality control functions: 
+\code{\link{dataQC.LatitudeLongitudeCheck}()},
+\code{\link{dataQC.TaxonListFromData}()},
+\code{\link{dataQC.completeTaxaNamesFromRegistery}()},
+\code{\link{dataQC.dateCheck}()},
+\code{\link{dataQC.eventStructure}()},
+\code{\link{dataQC.findNames}()},
+\code{\link{dataQC.generate.footprintWKT}()},
+\code{\link{dataQC.guess.env_package.from.data}()},
+\code{\link{dataQC.taxaNames}()}
+}
 \author{
 Maxime Sweetlove ccBY 4.0 2020
 }
+\concept{quality control functions}

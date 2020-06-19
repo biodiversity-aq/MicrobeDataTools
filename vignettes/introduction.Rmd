@@ -1,11 +1,86 @@
 ---
-title: "introduction"
+title: "General Overview"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{introduction}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+# General Overview
+
+The MicrobDateTools package was develloped as a set of tools to standardize microbial 'omics datasets. 
+
+There are xx set of functions
+
+## 1. Downloading data
+download.sequences.INSDC
+get.BioProject.metadata.INSDC
+get.sample.attributes.INSDC
+
+## 2. Data quality controll
+dataQC.completeTaxaNamesFromRegistery
+dataQC.dateCheck  
+dataQC.LatitudeLongitudeCheck
+dataQC.taxaNames
+dataQC.TermsCheck
+
+dataQC.eventStructure
+dataQC.generate.footprintWKT
+dataQC.guess.env_package.from.data
+
+dataQC.findNames
+dataQC.TaxonListFromData
+
+## 3. Data standardisation
+dataQC.MIxS
+dataQC.DwC
+dataQC.DwC_general
+
+commonTax.to.NCBI.TaxID
+coordinate.to.decimal
+
+## 4 upload data
+sync.metadata.sequenceFiles
+prep.metadata.ENA
+rename.sequenceFiles
+FileNames.to.Table
+
+## 5. Data objects and validation
+check.valid.metadata.DwC
+check.valid.metadata.MIxS
+
+
+
+## 6. data help
+get.boundingBox
+get.insertSize
+
+get.ENAName
+term.definition
+
+## 7. data formtting manipulation
+combine.data
+combine.data.frame
+eMoF.to.wideTable
+wideTable.to.eMoF
+wideTab.to.hierarchicalTab
+
+## 8. Data Libraries       
+ENA_allowed_terms
+ENA_checklistAccession
+ENA_instrument
+ENA_geoloc
+ENA_select
+ENA_strat
+TaxIDLib
+
+MarsLib
+
+TermsSyn
+TermsLib
+TermsSyn_DwC
+   
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(

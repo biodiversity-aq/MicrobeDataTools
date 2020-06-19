@@ -2,28 +2,36 @@
 % Please edit documentation in R/DataFormat_Utils.R
 \name{combine.data}
 \alias{combine.data}
-\title{merge metadata.MIxS objects}
+\title{merge MIxS.metadata objects}
 \usage{
 combine.data(d1, d2, fill=NA, variables.as.cols=TRUE)
 }
 \arguments{
-\item{d1}{a metadata.MIxS object}
+\item{d1}{a MIxS.metadata object}
 
-\item{d2}{a metadata.MIxS object}
+\item{d2}{a MIxS.metadata object}
 
 \item{fill}{character or NA. A value to put into the cells that have no data.}
 
 \item{variables.as.cols}{boolean. If TRUE, the input data is assumed to have rows as samples and variables/parameters as columns. If FALSE the data is formatted the other was around. default TRUE}
 }
 \value{
-a metadata.MIxS object
+a MIxS.metadata object
 }
 \description{
-combine.data combines two metadata.MIxS objects into one, merging all common variables (columns as default).
+combine.data combines two MIxS.metadata objects into one, merging all common variables (columns as default).
 }
 \details{
 Variables with matching names are merged, if variables.as.cols=TRUE this means columns are merged, if FALSE rows are merged. Any missing data as a result of the non-matchng variable-name will be filled by the fill argument.
 }
+\seealso{
+Other formating functions: 
+\code{\link{combine.data.frame}()},
+\code{\link{eMoF.to.wideTable}()},
+\code{\link{wideTab.to.hierarchicalTab}()},
+\code{\link{wideTable.to.eMoF}()}
+}
 \author{
 Maxime Sweetlove ccBY 4.0 2019
 }
+\concept{formating functions}

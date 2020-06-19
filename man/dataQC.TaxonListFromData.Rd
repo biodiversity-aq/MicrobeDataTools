@@ -15,6 +15,19 @@ a vector with the highest level taxonomic name found, with genus and species epi
 \description{
 tries to find taxonomic names for samples (rows) in a dataset (data.frame),
 }
+\seealso{
+Other quality control functions: 
+\code{\link{dataQC.LatitudeLongitudeCheck}()},
+\code{\link{dataQC.TermsCheck}()},
+\code{\link{dataQC.completeTaxaNamesFromRegistery}()},
+\code{\link{dataQC.dateCheck}()},
+\code{\link{dataQC.eventStructure}()},
+\code{\link{dataQC.findNames}()},
+\code{\link{dataQC.generate.footprintWKT}()},
+\code{\link{dataQC.guess.env_package.from.data}()},
+\code{\link{dataQC.taxaNames}()}
+}
 \author{
 Maxime Sweetlove CC-BY 4.0 2020
 }
+\concept{quality control functions}

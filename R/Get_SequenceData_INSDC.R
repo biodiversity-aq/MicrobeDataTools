@@ -1,8 +1,4 @@
 #==============================================================
-# The MicrobeDataTools package
-#       MicrobeDataTools is a collection data management tools for microbial 'omics datasets.
-#       They allow to download, structure, quqlity-controll and standardize microbial datasets
-#==============================================================
 # Author Maxime Sweetlove
 # lisence CC 4.0
 # Part of the POLA3R website (successor or mARS.biodiversity.aq)
@@ -15,15 +11,15 @@
 
 #' Fetch BioProject metadata
 #' @author Maxime Sweetlove ccBY 4.0 2019
+#' @family downloading data functions
 #' @description downloads a minimal set of sample metadata of all samples ("Runs") within a BioProject (argument BioPrjct) from the International Nucleotide Sequence Database Consortium (INSDC) databases.
 #' @usage get.BioProject.metadata.INSDC(BioPrjct, just.names=FALSE)
-#' @param BioPrjct  A chracter string. A single Bioproject ID.
+#' @param BioPrjct  A chracter string. A single Bioproject ID, e.g. "PRJNA369175"
 #' @param just.names  Boolean. If TRUE, only the INSDC sample names are returned, else all data are returned. default FALSE
 #' @details BioProjects combine all biological nucleotide sequence data related to a single initiative, originating from a single organization. With each sample ("Run") within a BioProject, there is additional data associated that is crucial to the correct interpretation of the nucleotide sequence data, but is not automatically downloaded along with it. The get.BioProject.metadata.INSDC function will fetch the most basic metadata of a BioProject from the INSDC repositories to complete the nucleotide sequence dataset, using E-utils API function of NCBI. These basic metadata typically include Run number, relsease date, load date, spots, bases, av_MB and download path. Note that the data returned by get.BioProject.metadata.INSDC does not include all the metadata associated with a BioProject. Other information, like coordinates, sampling dates or environmental measurements may also be available, but require the user to register at NCBI and request a personal API-key (this is required by NCBI to acces their data since 2017). The complete set of additional data can be downloaded using the get.sample.attributes.INSDC function, given a user-specified API-key. see https://ncbiinsights.ncbi.nlm.nih.gov/2017/11/02/new-api-keys-for-the-e-utilities/
 #' @seealso get.sample.attributes.INSDC
 #' @return if get.BioProject.metadata.INSDC(just.names=FALSE) (default) a data.frame with n rows an m columns is returned, n being the number of samples in the BioProject, and m being the number of variables found. If get.BioProject.metadata.INSDC(just.names=TRUE), a character vector of length n is returned with the sample numbers ("Run numbers", SRR numbers)
 #' @references Sayers, E. (2009) The E-utilities In-Depth: Parameters, Syntax and More, https://www.ncbi.nlm.nih.gov/books/NBK25499/
-#' @example metadata_PRJNA369175 <- get.BioProject.metadata.INSDC(BioPrjct="PRJNA369175", just.names=FALSE)
 #' @export
 get.BioProject.metadata.INSDC <- function(BioPrjct=NA, just.names=FALSE){
   if(! is.character(BioPrjct) | c(NULL,NA) %in% BioPrjct | length(BioPrjct)>1){
@@ -49,6 +45,8 @@ get.BioProject.metadata.INSDC <- function(BioPrjct=NA, just.names=FALSE){
 
 #' Downloads all sequence sample attributes
 #' @author Maxime Sweetlove ccBY 4.0 2019
+#' @usage get.sample.attributes.INSDC(sampleID, apiKey, BioPrjct)
+#' @family downloading data functions
 #' @description Downloads all sample attributes (that is, additional environmental or other associated data) from INSDC. Note: requires a user-specified API-key to acces the INSDC databases. see https://ncbiinsights.ncbi.nlm.nih.gov/2017/11/02/new-api-keys-for-the-e-utilities/ to generate an API-key
 #' @param sampleID a list. a list of one ore more SRA sample IDs (that is "Run" numbers). This argument can be left blank if input is provided for the BioPrjct argument (see further)
 #' @param apiKey a character string. A personal API-key to the acces the NCBI databases, and required to use the Entrez Programming Utilities (E-utilities). An API-key (API stands for application programming interface) is a unique identifier used to authenticate a user. A personal API-key can easily be generated at requested at https://ncbiinsights.ncbi.nlm.nih.gov/2017/11/02/new-api-keys-for-the-e-utilities/
@@ -146,6 +144,7 @@ get.sample.attributes.INSDC <- function(sampleID=NA, apiKey=NA, BioPrjct=NA){
 
 #' Download open sequence data to your computer.
 #' @author Maxime Sweetlove ccBY 4.0 2019
+#' @family downloading data functions
 #' @description Downloads (high throughput) nucleotide sequence datasets that are deposited on the International Nucleotide Sequence Database Consortium (INSDC, e.g. SRA, ENA, GenBank,...). Any possible metadata and environmental data is also downloaded.
 #' @usage download.sequences.INSDC(BioPrj = c(), destination.path = NA, apiKey=NA, unzip = FALSE, keep.metadata = TRUE, download.sequences = TRUE)
 #' @param BioPrj a list with character strings. A list of one or more BioProject numbers to be downloaded. Required argument.
@@ -174,27 +173,27 @@ download.sequences.INSDC <- function(BioPrj = c(), destination.path = NA, apiKey
     if(is.na(apiKey)){stop("No apiKey provided.
                                          A personal API key for the Entrez Programming Utilities (E-utilities) should be requested at the NCBI website.\n")
     }
-    cat("Notice!\nthe metadata will be retruned to the Console\nIf you did assign the output of this function to an R-object (using \"<-\"): better abort and restart now\n\n")
+    message("Notice!\nthe metadata will be retruned to the Console\nIf you did assign the output of this function to an R-object (using \"<-\"): better abort and restart now\n\n")
   }
 
   # 2. start going though the BioProjects
-  cat("Getting the metadata ...\n")
+  message("Getting the metadata ...\n")
   downloads_failed<-0
   for(BP in BioPrj){
-    cat(paste("Processing BioProject ",BP,"...\n", sep=""))
+    message(paste("Processing BioProject ",BP,"...\n", sep=""))
     faultyBioPrj<-FALSE
     ### 2.1. Downloading the metadata from SRA to get the run numbers (=samples) of the BioProject
     ###    These run numbers are the required input to download the sequence data, as sequence data cannot be redectly downloaded via the BioProject number
     faultyBioPrj <- tryCatch({
       RawMetadata <- get.BioProject.metadata.INSDC(BP)
-      cat(paste("\t",as.character(nrow(RawMetadata))," samples (Runs)...\n", sep=""))
+      message(paste("\t",as.character(nrow(RawMetadata))," samples (Runs)...\n", sep=""))
     }, error = function(e) {
       return(TRUE)
     })
 
     if(! is.null(faultyBioPrj) && faultyBioPrj){
       downloads_failed <- downloads_failed+1
-      cat(paste("\t No data found for ", BP,". Could not download the data.\n", sep=""))
+      message(paste("\t No data found for ", BP,". Could not download the data.\n", sep=""))
     } else{
       faultyBioPrj<-FALSE
     }
@@ -214,7 +213,7 @@ download.sequences.INSDC <- function(BioPrj = c(), destination.path = NA, apiKey
 
     ### 2.2. if keep.metadata==TRUE, the raw metadata must be cleaned up, and if applicable added to the other metadata
     if(keep.metadata & !faultyBioPrj){
-      cat("\tprocessing the metadata ...\n")
+      message("\tprocessing the metadata ...\n")
       sample_numbers<-as.character(RawMetadata$Run)
       env_data <- get.sample.attributes.INSDC(sampleID = sample_numbers,
                                               apiKey = apiKey, BioPrjct = BP)
@@ -236,7 +235,7 @@ download.sequences.INSDC <- function(BioPrj = c(), destination.path = NA, apiKey
     #      No way of getting te data without the SRA sqlite database...
     #      Also using the sample names gathered in (1) instead of the BioProject number
     if(download.sequences & !faultyBioPrj){
-      cat("\tDownloading the sequence data ...\n")
+      message("\tDownloading the sequence data ...\n")
       ftps <- as.character(RawMetadata$ftp)
       ftps <- sapply(ftps, function(x){strsplit(x, ";")})
       ftps <- unname(unlist(ftps))
@@ -252,7 +251,7 @@ download.sequences.INSDC <- function(BioPrj = c(), destination.path = NA, apiKey
 
   ### 2.4. unzipping the data, if required by the user
   if(unzip == TRUE & !faultyBioPrj){
-    cat("Unzipping files ...\n")
+    message("Unzipping files ...\n")
     fileList<- list.files(path=getwd(), pattern='*.fastq.gz')
     for(file in fileList){
       fileName= strsplit(file, ".gz")[[1]]
@@ -270,7 +269,7 @@ download.sequences.INSDC <- function(BioPrj = c(), destination.path = NA, apiKey
   } else{
     outputmessage <- paste("Finished processing\nNo files were downloaded\n", sep="")
   }
-  cat(outputmessage)
+  message(outputmessage)
   if(keep.metadata){return(metadata_all)}
 }
 

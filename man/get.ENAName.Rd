@@ -15,6 +15,15 @@ a character
 \description{
 get the ENA variant a MIxS term
 }
+\seealso{
+Other data archiving functions: 
+\code{\link{FileNames.to.Table}()},
+\code{\link{commonTax.to.NCBI.TaxID}()},
+\code{\link{prep.metadata.ENA}()},
+\code{\link{renameSequenceFiles}()},
+\code{\link{sync.metadata.sequenceFiles}()}
+}
 \author{
 Maxime Sweetlove ccBY 4.0 2019
 }
+\concept{data archiving functions}

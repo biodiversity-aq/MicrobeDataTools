@@ -20,6 +20,19 @@ complete a list of taxonomic names by looking-up missing information on an accep
 \details{
 using the API-client connection to the World Registry of Marine Species (WORMS), additional taxonomic information can be added to an existing list of taxa
 }
+\seealso{
+Other quality control functions: 
+\code{\link{dataQC.LatitudeLongitudeCheck}()},
+\code{\link{dataQC.TaxonListFromData}()},
+\code{\link{dataQC.TermsCheck}()},
+\code{\link{dataQC.dateCheck}()},
+\code{\link{dataQC.eventStructure}()},
+\code{\link{dataQC.findNames}()},
+\code{\link{dataQC.generate.footprintWKT}()},
+\code{\link{dataQC.guess.env_package.from.data}()},
+\code{\link{dataQC.taxaNames}()}
+}
 \author{
 Maxime Sweetlove CC-BY 4.0 2020
 }
+\concept{quality control functions}

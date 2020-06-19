@@ -7,7 +7,7 @@
 get.BioProject.metadata.INSDC(BioPrjct, just.names=FALSE)
 }
 \arguments{
-\item{BioPrjct}{A chracter string. A single Bioproject ID.}
+\item{BioPrjct}{A chracter string. A single Bioproject ID, e.g. "PRJNA369175"}
 
 \item{just.names}{Boolean. If TRUE, only the INSDC sample names are returned, else all data are returned. default FALSE}
 }
@@ -25,7 +25,12 @@ Sayers, E. (2009) The E-utilities In-Depth: Parameters, Syntax and More, https:/
 }
 \seealso{
 get.sample.attributes.INSDC
+
+Other downloading data functions: 
+\code{\link{download.sequences.INSDC}()},
+\code{\link{get.sample.attributes.INSDC}()}
 }
 \author{
 Maxime Sweetlove ccBY 4.0 2019
 }
+\concept{downloading data functions}

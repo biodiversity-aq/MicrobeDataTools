@@ -20,6 +20,19 @@ looks in the columns of a dataset for clues to what the most appropriate MIxS en
 \details{
 The "Minimul Information on any (x) Sequence" (MIxS) standard requires an appropriate environmental package with MIxS terms to be selected to document the data. Some data and nucleotide archives enforce their users to select such a package. This function is made to automatically either find the package in a dataset, of guess it based on the data that is present.
 }
+\seealso{
+Other quality control functions: 
+\code{\link{dataQC.LatitudeLongitudeCheck}()},
+\code{\link{dataQC.TaxonListFromData}()},
+\code{\link{dataQC.TermsCheck}()},
+\code{\link{dataQC.completeTaxaNamesFromRegistery}()},
+\code{\link{dataQC.dateCheck}()},
+\code{\link{dataQC.eventStructure}()},
+\code{\link{dataQC.findNames}()},
+\code{\link{dataQC.generate.footprintWKT}()},
+\code{\link{dataQC.taxaNames}()}
+}
 \author{
 Maxime Sweetlove CC-BY 4.0 2019
 }
+\concept{quality control functions}

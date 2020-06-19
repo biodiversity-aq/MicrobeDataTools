@@ -13,7 +13,11 @@ combine.data.frame(df1, df2, fill=NA, merge.cols=TRUE)
 
 \item{fill}{character or NA. A value to put into the cells that have no data. Default NA}
 
-\item{merge.cols}{boolean. Merge colomns with common name. Default TRUE}
+\item{merge.cols}{logical. Merge colomns with common name. Default TRUE}
+
+\item{original_rowName.col}{logical. if TRUE, add a column with the original rownames. Default TRUE}
+
+\item{merge.rows}{character. If the data.frames df1 and df2 have common rows, the values for these rows of this dataset must be kept in favor of the other. If NA, both rows will be kept. Either "df1", "df2" or NA. Default "df1"}
 }
 \value{
 a data.frame
@@ -24,6 +28,14 @@ combine.data.frame merges two dataframes, completing the rows and columns that a
 \details{
 Columns with matching names can or cannot be merged, rows are automatically bound (a wrapper of rbind), not merged. Any missing data as a result of the non-matchng columns will be filled by the fill argument.
 }
+\seealso{
+Other formating functions: 
+\code{\link{combine.data}()},
+\code{\link{eMoF.to.wideTable}()},
+\code{\link{wideTab.to.hierarchicalTab}()},
+\code{\link{wideTable.to.eMoF}()}
+}
 \author{
 Maxime Sweetlove ccBY 4.0 2019
 }
+\concept{formating functions}

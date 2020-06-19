@@ -1,8 +1,4 @@
 #==============================================================
-# The MicrobeDataTools package
-#       MicrobeDataTools is a collection data management tools for microbial 'omics datasets.
-#       They allow to download, structure, quqlity-controll and standardize microbial datasets
-#==============================================================
 # Author Maxime Sweetlove
 # lisence CC 4.0
 # Part of the POLA3R website (successor or mARS.biodiversity.aq)
@@ -12,41 +8,58 @@
 #==============================================================
 
 #--------------------------------------------------------------
-# metadata.MIxS
+# classes for metadata formatted as MIxS
 #--------------------------------------------------------------
-# metadata.MIxS Class object
-#--------------------------------------------------------------
-setClass("metadata.MIxS", slots=list(data="data.frame", #a dataframe with the metadata (samples are rows, variables are columns)
-                                     section="character", #a character vector containing a MIxS section for each term (variable)
-                                     units="character", #a character vector containing a unit for each variable
-                                     type="character", #versatile (loose following of MIxS) or strict.MIxS (following all the MIxS rules)
-                                     env_package="character", #the environmental package. Can be not_specified or multiple_packages.
-                                     QC="logical" #Has the data been Quality comtrolled (TRUE/FALSE)
+# The Minimum Information on any Sequence (MIxS) standard was designed by the Genomics Standards Consortium to archive metadata and environmental data that is associated with sequence data.
+# the MIxS.metadata class is made to work with this type of data in R
+
+#' an S4 class to document data formated in the MIxS standard
+#' @slot data a data.frame with the meta- and/or environmental data, formatted with samples/events as rows, and variables/MIxS terms as columns.
+#' @slot section a character, a vector with the same length and order as number of columns of the dataframe in the data slot, containing a MIxS section/cathegory for each term
+#' @slot units a character. a vector with the same length and order as number of columns of the dataframe in the data slot, containing a unit for each variable (use "alphanumeric" if there is no unit)
+#' @slot type a character. Either "versatile", meaning the object is a loose following of the MIxS standard, or "strict.MIxS", meaning the object strictly follows all the MIxS rules.
+#' @slot env_package a character. The MIxS environmental package that is appropriate for this dataset. Can also be not_specified or multiple_packages.
+#' @slot QC boolean to indicate that the data been Quality controlled (TRUE) or not (FALSE) 
+setClass("MIxS.metadata", slots=list(data="data.frame", 
+                                     section="character", 
+                                     units="character", 
+                                     type="character", 
+                                     env_package="character", 
+                                     QC="logical" 
 )
 )
 
-#--------------------------------------------------------------
-# metadata.MIxS Methods
-#--------------------------------------------------------------
+# methods for MIxS.metadata
+#' the show method for MIxS.metadata
+#' @author Maxime Sweetlove ccBY 4.0 2020
+#' @method show MIxS.metadata
+#' @export
 setMethod("show",
-          "metadata.MIxS",
+          "MIxS.metadata",
           function(object) {
             N <- nrow(object@data)
             C <- ncol(object@data)
-            cat(paste("a metadata.MIxS class object with", as.character(N), "samples and",
+            message(paste("a MIxS.metadata class object with", as.character(N), "samples and",
                       as.character(C), "variables\n"))
             if(object@QC){
-              cat("\tThe quality of this object has been checked.\n")
+              message("\tThe quality of this object has been checked.\n")
             }else{
-              cat("\tThe quality of this object has NOT been checked.\n")
+              message("\tThe quality of this object has NOT been checked.\n")
             }
           }
 )
 
-check.valid.metadata.MIxS <- function(d){
+#' validate a MIxS.metadata class object
+#' @author Maxime Sweetlove ccBY 4.0 2020
+#' @description validates if a MIxS.metadata object is implemented correctly
+#' @usage check.valid.MIxS.metadata(d)
+#' @param d a MIxS.metadata object
+#' @return a boolean, TRUE when valid, FALSE when not
+#' @export
+check.valid.MIxS.metadata <- function(d){
   valid <- TRUE
-  #class must be metadata.MIxS
-  if(!class(d)=="metadata.MIxS"){
+  #class must be MIxS.metadata
+  if(!class(d)=="MIxS.metadata"){
     valid <- FALSE
   }else{
     dcol <- ncol(d@data)
@@ -78,18 +91,34 @@ check.valid.metadata.MIxS <- function(d){
 }
 
 #--------------------------------------------------------------
-# metadata.DwC
+# classes for data formatted as DarwinCore
 #--------------------------------------------------------------
-# metadata.DwC Class Object
-#--------------------------------------------------------------
-setClass("DwC.event", slots=list(core="data.frame", #a dataframe with the DwC event core (events are rows, variables are columns)
-                                occurrence="data.frame", #a dataframe with the occurrence extension
-                                emof="data.frame", #a dataframe with the DwC eMoF extention (=the environmental data)
-                                EML.url="character", #the url to the EML file from the IPT
-                                QC="logical" #Has the data been Quality comtrolled (TRUE/FALSE)
+# DarwinCore a data standard for ecologcal and biodiversity data that was develloped by TDWG. It differs from MIxS in that is centred around observations of species, and not sequence or environmental data.
+# flavour 1: the DarwinCore EventCore
+# In the EventCore, data is structured as (hierarchical and nested) events (the core), that can be associated with different types of information (e.g. environmental measurements (emof extension), species occurrences (occurrence extension) or sequence data)
+
+#' an S4 class to document data formated in the DarwinCore event core format
+#' @slot core a data.frame. The DwC event core, formatted with samples/events as rows, and variables/DwCTerms as columns.
+#' @slot occurrence a data.frame. The occurrence extension, formatted with occurrences as rows and variables/DwCTerms as columns. Must contain "eventID", "occurrenceID" and "basisOfRecord"
+#' @slot emof a data.frame. The DwC extended Measurement or Fact (eMoF) extention. This can be used to store environmental data using the MIxS vocabulary.
+#' @slot EML.url a character. the url to the Ecological Metadata Language (EML) file from the IPT
+#' @slot QC boolean to indicate that the data been Quality controlled (TRUE) or not (FALSE) 
+setClass("DwC.event", slots=list(core="data.frame",
+                                occurrence="data.frame", 
+                                emof="data.frame",
+                                EML.url="character",
+                                QC="logical"
 )
 )
 
+# flavour 2: the DarwinCore OccurrenceCore
+# In the OccurrenceCore, data is structured as occurrences of species (core), that can be associated with environmental measurements (emof extension)
+
+#' an S4 class to document data formated in the DarwinCore occurrence core format
+#' @slot core a data.frame. The DwC occurrence core, formatted with occurrences as rows and variables/DwCTerms as columns. Must contain "eventID", "occurrenceID" and "basisOfRecord"
+#' @slot emof a data.frame. The DwC extended Measurement or Fact (eMoF) extention. This can be used to store environmental data using the MIxS vocabulary.
+#' @slot EML.url a character. the url to the Ecological Metadata Language (EML) file from the IPT
+#' @slot QC boolean to indicate that the data been Quality controlled (TRUE) or not (FALSE) 
 setClass("DwC.occurrence", slots=list(core="data.frame", #a dataframe with the DwC event core (events are rows, variables are columns)
                                       emof="data.frame", #a dataframe with the DwC eMoF extention (=the environmental data)
                                       EML.url="character", #the url to the EML file from the IPT
@@ -97,9 +126,11 @@ setClass("DwC.occurrence", slots=list(core="data.frame", #a dataframe with the D
 )
 )
 
-#--------------------------------------------------------------
-# metadata.DwC Methods
-#--------------------------------------------------------------
+# methods for DarwinCore class objects
+#' the show method for DwC.event
+#' @author Maxime Sweetlove ccBY 4.0 2020
+#' @method show DwC.event
+#' @export
 setMethod("show",
           "DwC.event",
           function(object) {
@@ -111,19 +142,24 @@ setMethod("show",
             }else if(nrow(object@emof)==0 & nrow(object@occurrence)>0){
               E <- "and an occurrence extension"
             }else{ E <- ""}
-            cat(paste("a  DwC.event class  object with a core of ", as.character(N),
+            message(paste("a  DwC.event class  object with a core of ", as.character(N),
                       " events", as.character(E), ".\n", sep=""))
             if(EML.url!=""){
-              cat(paste("\tThe metadata can be found at", EML.url,
+              message(paste("\tThe metadata can be found at", EML.url,
                         "\n", sep=""))
             }
             if(object@QC){
-              cat("\tThe quality of this object has been checked.\n")
+              message("\tThe quality of this object has been checked.\n")
             }else{
-              cat("\tThe quality of this object has NOT been checked.\n")
+              message("\tThe quality of this object has NOT been checked.\n")
             }
           }
 )
+
+#' the show method for DwC.occurrence
+#' @author Maxime Sweetlove ccBY 4.0 2020
+#' @method show DwC.occurrence
+#' @export
 setMethod("show",
           "DwC.occurrence",
           function(object) {
@@ -131,22 +167,28 @@ setMethod("show",
             if(nrow(object@emof)>0){
               E <- "and an eMoF extension"
             }else{ E <- ""}
-            cat(paste("a  DwC.occurrence  class object with a core of ", as.character(N),
+            message(paste("a  DwC.occurrence  class object with a core of ", as.character(N),
                       " occurrences", as.character(E), ".\n", sep=""))
             if(EML.url!=""){
-              cat(paste("\tThe metadata can be found at", EML.url,
+              message(paste("\tThe metadata can be found at", EML.url,
                         "\n", sep=""))
             }
             if(object@QC){
-              cat("\tThe quality of this object has been checked.\n")
+              message("\tThe quality of this object has been checked.\n")
             }else{
-              cat("\tThe quality of this object has NOT been checked.\n")
+              message("\tThe quality of this object has NOT been checked.\n")
             }
           }
 )
 
 
-
+#' validate a DarwinCore class object
+#' @author Maxime Sweetlove ccBY 4.0 2020
+#' @description validates if a DwC.event or DwC.occurrence object is implemented correctly
+#' @usage check.valid.metadata.DwC(d)
+#' @param d a DwC.event or DwC.occurrence object
+#' @return a boolean, TRUE when valid, FALSE when not
+#' @export
 check.valid.metadata.DwC <- function(d){
   valid <- TRUE
   #class must be DwC.event or DwC.occurrence

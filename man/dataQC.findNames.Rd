@@ -20,6 +20,19 @@ find the sample names in a given (meta-)dataset where at least an attempt has be
 \details{
 It is often not clear where the sample names are in a dataset. This function makes an educated guess, based on rownames or tags that are often used to indicate sample names. If ask.input, then the process happens user-supervised.
 }
+\seealso{
+Other quality control functions: 
+\code{\link{dataQC.LatitudeLongitudeCheck}()},
+\code{\link{dataQC.TaxonListFromData}()},
+\code{\link{dataQC.TermsCheck}()},
+\code{\link{dataQC.completeTaxaNamesFromRegistery}()},
+\code{\link{dataQC.dateCheck}()},
+\code{\link{dataQC.eventStructure}()},
+\code{\link{dataQC.generate.footprintWKT}()},
+\code{\link{dataQC.guess.env_package.from.data}()},
+\code{\link{dataQC.taxaNames}()}
+}
 \author{
 Maxime Sweetlove ccBY 4.0 2020
 }
+\concept{quality control functions}

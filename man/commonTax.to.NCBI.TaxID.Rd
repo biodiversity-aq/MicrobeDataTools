@@ -20,6 +20,15 @@ converts taxon names of common taxa (superkingdom and phylum level) to it's NCBI
 \details{
 This function makes use of a limited internal library, not all the taxIDs are present
 }
+\seealso{
+Other data archiving functions: 
+\code{\link{FileNames.to.Table}()},
+\code{\link{get.ENAName}()},
+\code{\link{prep.metadata.ENA}()},
+\code{\link{renameSequenceFiles}()},
+\code{\link{sync.metadata.sequenceFiles}()}
+}
 \author{
 Maxime Sweetlove ccBY 4.0 2019
 }
+\concept{data archiving functions}
