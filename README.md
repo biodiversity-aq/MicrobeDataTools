@@ -2,11 +2,6 @@
 
 ## package name
 working name: MicrobeDataTools
-other potential names:
-QCData
-StandardData
-standardomics
-ecostandard
 
 ## Badges
 
