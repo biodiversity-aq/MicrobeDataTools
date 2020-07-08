@@ -506,23 +506,29 @@ dataQC.findNames <- function(dataset = NA, ask.input=TRUE){
   rownames(orig_names) <- rownames(dataset)
   warningmessages <- ""
   item_shared <- intersect(TermsSyn["original_name"][[1]], tolower(colnames(dataset)))
+  # loop over the potential names in a fixed order
   if(length(item_shared)>=1){
-    likely_sampNames <- item_shared[1] #order of item_shared is in decreasing likelyness
-    likely_sampNames_orig <- colnames(dataset)[tolower(colnames(dataset))==likely_sampNames]
     if(ask.input){
-      message(paste("The original sample names could be in the \"",likely_sampNames_orig,"\" column.\n", 
-                    "\tThe first five names in this column are:\n\t\t", 
-                    paste(dataset[1:5,tolower(colnames(dataset))==likely_sampNames], collapse="\n\t\t"), 
-                    " ...\n\tDoes this seems correct? (y/n)\n",
-                    sep=""))
-      doNext <- readline()
-      if(tolower(doNext) %in% c("y", "yes")){
-        orig_names$original_names <- as.character(dataset[,tolower(colnames(dataset))==likely_sampNames])
-        warningmessages <- paste("assumed the \"",likely_sampNames_orig,"\" column contained the original sample names", sep="")
-      }else if(!tolower(doNext) %in% c("n", "no")){
-        stop("incorrect input... only yes or no allowed.")
+      for(si in 1:length(item_shared)){
+        likely_sampNames <- item_shared[si] #order of item_shared is in decreasing likelyness
+        likely_sampNames_orig <- colnames(dataset)[tolower(colnames(dataset))==likely_sampNames]
+        message(paste("The original sample names could be in the \"",likely_sampNames_orig,"\" column.\n", 
+                      "\tThe first five names in this column are:\n\t\t", 
+                      paste(dataset[1:5,tolower(colnames(dataset))==likely_sampNames], collapse="\n\t\t"), 
+                      " ...\n\tDoes this seems correct? (y/n)\n",
+                      sep=""))
+        doNext <- readline()
+        if(tolower(doNext) %in% c("y", "yes")){
+          orig_names$original_names <- as.character(dataset[,tolower(colnames(dataset))==likely_sampNames])
+          warningmessages <- paste("assumed the \"",likely_sampNames_orig,"\" column contained the original sample names", sep="")
+          break
+        }else if(!tolower(doNext) %in% c("n", "no")){
+          stop("incorrect input... only yes or no allowed.")
+        }
       }
     }else{
+      likely_sampNames <- item_shared[1]
+      likely_sampNames_orig <- colnames(dataset)[tolower(colnames(dataset))==likely_sampNames]
       orig_names$original_names <- as.character(dataset[,tolower(colnames(dataset))==likely_sampNames])
       warningmessages <- paste("assumed the \"",likely_sampNames_orig,"\" column contained the original sample names", sep="")
     }
@@ -559,17 +565,17 @@ dataQC.findNames <- function(dataset = NA, ask.input=TRUE){
   }
 
   #find and return some other common sample IDs
-  if("eventid" %in% tolower(colnames(dataset))){
-    orig_names$eventID <- as.character(dataset[,tolower(colnames(dataset))=="eventid"])
+  if("eventID" %in% colnames(dataset)){
+    orig_names$eventID <- as.character(dataset[,colnames(dataset)=="eventID"])
   }
-  if("parenteventid" %in% tolower(colnames(dataset))){
-    orig_names$eventID <- as.character(dataset[,tolower(colnames(dataset))=="parenteventid"])
+  if("parentEventID" %in% colnames(dataset)){
+    orig_names$parentEventID <- as.character(dataset[,colnames(dataset)=="parentEventID"])
   }
-  if("insdc_sampleid" %in% tolower(colnames(dataset))){
-    orig_names$eventID <- as.character(dataset[,tolower(colnames(dataset))=="insdc_sampleid"])
+  if("INSDC_SampleID" %in% colnames(dataset)){
+    orig_names$INSDC_SampleID <- as.character(dataset[,colnames(dataset)=="INSDC_SampleID"])
   }
-  if("occurrenceid" %in% tolower(colnames(dataset))){
-    orig_names$eventID <- as.character(dataset[,tolower(colnames(dataset))=="occurrenceid"])
+  if("occurrenceID" %in% colnames(dataset)){
+    orig_names$occurrenceID <- as.character(dataset[,colnames(dataset)=="occurrenceID"])
   }
 
   return(list(Names=orig_names, Names.column=likely_sampNames_orig, warningmessages = warningmessages))
@@ -803,6 +809,8 @@ dataQC.eventStructure <- function(dataset, eventID.col = "eventID", parentEventI
     }
   }else if(!eventID.col %in% colnames(dataset)){
     stop("eventID.col not found")
+  }else if(length(unique(dataset[,eventID.col])) < nrow(dataset)){
+    stop("all events must be unique")
   }
 
   if(!is.na(project.col)){

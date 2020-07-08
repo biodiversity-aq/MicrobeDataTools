@@ -99,10 +99,14 @@ dataQC.MIxS <- function(metadata = NA, ask.input=TRUE, add_to = NA){
   error=function(x){
     warningmessages <- multi.warnings("duplicate or missing original sample names", warningmessages)
   })
-  if(!all((metadataNames$Names)$INSDC_SampleID=="") & !all(is.na((metadataNames$Names)$INSDC_SampleID))){New_metadata$INSDC_SampleID <- (metadataNames$Names)$INSDC_SampleID}
-  if(!all((metadataNames$Names)$eventID=="") & !all(is.na((metadataNames$Names)$eventID))){New_metadata$eventID <- (metadataNames$Names)$eventID}
-  if(!all((metadataNames$Names)$parentEventID=="") & !all(is.na((metadataNames$Names)$parentEventID))){New_metadata$parentEventID <- (metadataNames$Names)$parentEventID}
-  if(!all((metadataNames$Names)$occurrenceID=="") & !all(is.na((metadataNames$Names)$occurrenceID))){New_metadata$occurrenceID <- (metadataNames$Names)$occurrenceID}
+  if(!all((metadataNames$Names)$INSDC_SampleID=="") & !all(is.na((metadataNames$Names)$INSDC_SampleID))){
+    New_metadata$INSDC_SampleID <- (metadataNames$Names)$INSDC_SampleID}
+  if(!all((metadataNames$Names)$eventID=="") & !all(is.na((metadataNames$Names)$eventID))){
+    New_metadata$eventID <- (metadataNames$Names)$eventID}
+  if(!all((metadataNames$Names)$parentEventID=="") & !all(is.na((metadataNames$Names)$parentEventID))){
+    New_metadata$parentEventID <- (metadataNames$Names)$parentEventID}
+  if(!all((metadataNames$Names)$occurrenceID=="") & !all(is.na((metadataNames$Names)$occurrenceID))){
+    New_metadata$occurrenceID <- (metadataNames$Names)$occurrenceID}
   
   # 2. some basic info from insdc
   TermsSyn_insdc<-TermsSyn[as.character(TermsLib[TermsLib$name_origin=="INSDC",]$name)]
