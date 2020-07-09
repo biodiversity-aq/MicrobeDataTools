@@ -46,21 +46,14 @@ When users have ecological datasets that somehow can't be fit into this structur
   - make API key for ENA
   - install with devtools
 
-<<<<<<< HEAD
-=======
  > library(devtools)
  > devtools::install(_path_to_package_)
  
 
->>>>>>> ae4cff7e1564ee318f00a61a9c58db1692254f5a
 ## Brief demonstration usage
 
 ## Citation information
 Please cite as:
 Sweetlove M., Gan Y.M., Van de Putte A., 2020, MicrobeDataTools: an R package to download, format and standardize genomic meta- and environmental data.
 
-<<<<<<< HEAD
-=======
 
-
->>>>>>> ae4cff7e1564ee318f00a61a9c58db1692254f5a
