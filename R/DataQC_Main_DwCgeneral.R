@@ -49,6 +49,9 @@ dataQC.DwC_general<-function(DwC.data = NA, DwC.type = "event", ask.input = TRUE
   # use NA for missing data
   DwC.data[DwC.data==""]<-NA
   
+  # remove rows with all NA values
+  DwC.data <- DwC.data[rowSums(is.na(DwC.data))<ncol(DwC.data),]
+  
   # check columnnames
   termsQC <- dataQC.TermsCheck(observed=colnames(DwC.data),
                                exp.standard = "DwC", exp.section = DwC.type,

@@ -285,6 +285,7 @@ sync.metadata.sequenceFiles <- function(Names, file.dir=NULL,
 #' @param library_strategy a character string. The library strategy (e.g. AMPLICON, WGS,...), if applicable to all samples.
 #' @param library_selection a character string. The method used to select for, enrich or or screen the material being sequenced (e.g. PCR)?, if applicable to all samples.
 #' @param seq.file.extension a character string. The extension for the sequence files. Default is .fastq.gz
+#' @param pairedEnd.extension a character vector of length 2. If the data is paired-end data, specify the forward (first element of te vector) and reverse (second) extension tags here. Default is c("_1", "_2")
 #' @details This function will reformat metadata for submission to ENA. Specifically made for ecological environmental studies (e.g. amplicon sequencing, shotgun metagenomics,...), with additional QCs build in for Antarctic and Southern Ocean data. The assumption is taken that the dataset has already been subjected a quality controll.
 #' @return a *.tsv file with the sample metadata, and a \*_runInfo.tsv file with the technical data, written to the destination directory.
 #' @export
@@ -293,7 +294,7 @@ prep.metadata.ENA <- function(metadata, dest.dir=NULL, file.name=NULL,
                               tax_name=NA, ask.input=TRUE,
                               insert.size=NA, library.layout=NA,
                               library.strategy=NA, library.selection=NA,
-                              seq.file.extension=".fastq.gz"
+                              seq.file.extension=".fastq.gz", pairedEnd.extension=c("_1", "_2")
 ){
   warningmessages<-c()
 
@@ -804,8 +805,8 @@ prep.metadata.ENA <- function(metadata, dest.dir=NULL, file.name=NULL,
     for(i in 1:nrow(ena_runInfo)){
       if(ena_runInfo[i,]$library_layout == "PAIRED"){
         # assuming _1 for forward files and _2 for reverse files
-        ena_runInfo[i,colnames(ena_runInfo)=="forward_file_name"] <- paste(metadata[i,]$original_name, "_1", seq.file.extension, sep="")
-        ena_runInfo[i,colnames(ena_runInfo)=="reverse_file_name"] <- paste(metadata[i,]$original_name, "_2", seq.file.extension, sep="")
+        ena_runInfo[i,colnames(ena_runInfo)=="forward_file_name"] <- paste(metadata[i,]$original_name, pairedEnd.extension[1], seq.file.extension, sep="")
+        ena_runInfo[i,colnames(ena_runInfo)=="reverse_file_name"] <- paste(metadata[i,]$original_name, pairedEnd.extension[2], seq.file.extension, sep="")
       }else if(ena_runInfo[i,]$library_layout == "SINGLE"){
         ena_runInfo[i,colnames(ena_runInfo)=="forward_file_name"] <- paste(metadata[i,]$original_name, seq.file.extension, sep="")
         ena_runInfo[i,colnames(ena_runInfo)=="reverse_file_name"] <- paste(metadata[i,]$original_name, seq.file.extension, sep="")

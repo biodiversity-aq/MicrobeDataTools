@@ -4,7 +4,7 @@
 \alias{combine.data.frame}
 \title{merge dataframes}
 \usage{
-combine.data.frame(df1, df2, fill=NA, merge.cols=TRUE)
+combine.data.frame(df1, df2, fill=NA, merge.cols=TRUE, original_rowName.col=TRUE, merge.rows="df1")
 }
 \arguments{
 \item{df1}{a dataframe}

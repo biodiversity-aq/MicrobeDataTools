@@ -428,8 +428,8 @@ dataQC.TermsCheck <- function(observed=NA, exp.standard="MIxS", exp.section=NA, 
 #' @return a vector with a footprintWKT value for each row in the dataset
 #' @export
 dataQC.generate.footprintWKT <- function(dataset, NA.val=NA){
-  #requires mapview
-  #format POINT(lat lon)
+  #requires Orcs
+  #format POINT(lon lat)
   if(!"decimalLatitude" %in% colnames(dataset) |
      !"decimalLongitude" %in% colnames(dataset) |
      !"eventID" %in% colnames(dataset)){
@@ -443,7 +443,7 @@ dataQC.generate.footprintWKT <- function(dataset, NA.val=NA){
         lat<-dataset[dataset$eventID==ev,]$decimalLatitude
         lon<-dataset[dataset$eventID==ev,]$decimalLongitude
         if(!is.na(lat) & !is.na(lon) & lat!="" & lon!=""){
-          footprintWKT_vec <- c(footprintWKT_vec, paste("POINT(", as.character(lat), " ", as.character(lon), ")", sep=""))
+          footprintWKT_vec <- c(footprintWKT_vec, paste("POINT(", as.character(lon), " ", as.character(lat), ")", sep=""))
         } else{
           footprintWKT_vec <- c(footprintWKT_vec, NA.val)
         }
@@ -470,8 +470,8 @@ dataQC.generate.footprintWKT <- function(dataset, NA.val=NA){
         lat<-dataset[dataset$eventID %in% child_ev,]$decimalLatitude
         lon<-dataset[dataset$eventID %in% child_ev,]$decimalLongitude
         if(!all(is.na(lat)) & !all(is.na(lon)) & all(lat!="") & all(lon!="")){
-          coords <- as.matrix(data.frame(x=as.numeric(lat), y=as.numeric(lon)))
-          polygx <- mapview::coords2Polygons(coords, hole=FALSE, ID=ev)
+          coords <- as.matrix(data.frame(x=as.numeric(lon), y=as.numeric(lat)))
+          polygx <- Orcs::coords2Polygons(coords, hole=FALSE, ID=ev)
           footprintWKT_vec <- c(footprintWKT_vec, writeWKT(polygx))
         } else{
           footprintWKT_vec <- c(footprintWKT_vec, NA.val)
@@ -479,8 +479,8 @@ dataQC.generate.footprintWKT <- function(dataset, NA.val=NA){
       }
     }
   }else{
-    footprintWKT_vec <- paste("POINT(", as.character(dataset$decimalLatitude),
-                              " ", as.character(dataset$decimalLongitude), ")",
+    footprintWKT_vec <- paste("POINT(", as.character(dataset$decimalLongitude),
+                              " ", as.character(dataset$decimalLatitude), ")",
                               sep="")
   }
 

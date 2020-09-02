@@ -47,6 +47,9 @@ dataQC.MIxS <- function(metadata = NA, ask.input=TRUE, add_to = NA){
   colnames(metadata) <- gsub("[\\.]+", "_", colnames(metadata)) # replace double dots with underscore
   colnames(metadata) <- gsub("_$", "", colnames(metadata))  # remove trailing underscore
 
+  # remove rows with all NA values
+  metadata <- metadata[rowSums(is.na(metadata))<ncol(metadata),]
+  
   # 0.3 check if data is in one-header table or if there are additional MiMARKS header lines
   # for additional MIxS headers: "environmental package", "units template" => only units of importance
   pre_def_units <- FALSE

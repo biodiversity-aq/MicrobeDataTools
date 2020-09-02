@@ -18,6 +18,7 @@ Depends:
 	tidyr,
 	RecordLinkage,
 	mapview,
+	Orcs,
 	worrms,
 	rgbif,
 	stringr

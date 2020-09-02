@@ -16,7 +16,8 @@ prep.metadata.ENA(
   library.layout = NA,
   library.strategy = NA,
   library.selection = NA,
-  seq.file.extension = ".fastq.gz"
+  seq.file.extension = ".fastq.gz",
+  pairedEnd.extension = c("_1", "_2")
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ prep.metadata.ENA(
 \item{insert.size}{a character string. The size of the reads (in number of basepairs), if applicable to all samples.}
 
 \item{seq.file.extension}{a character string. The extension for the sequence files. Default is .fastq.gz}
+
+\item{pairedEnd.extension}{a character vector of length 2. If the data is paired-end data, specify the forward (first element of te vector) and reverse (second) extension tags here. Default is c("_1", "_2")}
 
 \item{library_layout}{a character string. The layout of the library, either PAIRED or SINGLE, if applicable to all samples.}
 

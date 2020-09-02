@@ -131,7 +131,7 @@ wideTable.to.eMoF <- function(metadata.object, variables=NA){
 #' @author Maxime Sweetlove ccBY 4.0 2019
 #' @family formating functions
 #' @description combine.data.frame merges two dataframes, completing the rows and columns that are not shared by the dataframes.
-#' @usage combine.data.frame(df1, df2, fill=NA, merge.cols=TRUE)
+#' @usage combine.data.frame(df1, df2, fill=NA, merge.cols=TRUE, original_rowName.col=TRUE, merge.rows="df1")
 #' @param df1 a dataframe
 #' @param df2 a dataframe
 #' @param fill character or NA. A value to put into the cells that have no data. Default NA
@@ -298,7 +298,7 @@ combine.data <- function(d1, d2, fill=NA, variables.as.cols=TRUE){
 
   shared_rows <- intersect(rownames(df1), rownames(df2))
 
-  if(length(shared_rows)>0){ #new column with original rownames
+  if(length(shared_rows)>0 & original_rowName.col){ #new column with original rownames
     df1$original_rowName <- row.names(df1)
     df2$original_rowName <- row.names(df2)
     shared_cols<-c(shared_cols, "original_rowName")
