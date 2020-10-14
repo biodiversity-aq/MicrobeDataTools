@@ -12,7 +12,7 @@ dataQC.dateCheck(dataset, date.colnames)
 \item{date.colnames}{character vector. a list of potential names for the column with the date. e.g. c("date", "Date", "collection date")}
 }
 \value{
-a list of length 2, with "$values" a dataframe with the same dimentions as the dataset argument, and "$warningmessages" a vector with potential warning messages as character strings.
+a list of length 2, with "$values" a vactor with the same number of rows as the dataset argument containing the corrected date values, and "$warningmessages" a vector with potential warning messages as character strings.
 }
 \description{
 looks in the columns of a dataset for a column with dates and transforms them to the YYYY-MM-DD format.

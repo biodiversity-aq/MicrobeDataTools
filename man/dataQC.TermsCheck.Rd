@@ -4,7 +4,7 @@
 \alias{dataQC.TermsCheck}
 \title{make variable names in a dataset to comply to a standrad}
 \usage{
-Check.terms(observed, exp.standard="MIxS", exp.section=NA, fuzzy.match=TRUE, out.type="full")
+dataQC.TermsCheck(observed=NA, exp.standard="MIxS", exp.section=NA, fuzzy.match=TRUE,out.type="full")
 }
 \arguments{
 \item{observed}{character vector. The terms to be checked}

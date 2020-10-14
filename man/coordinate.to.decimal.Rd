@@ -4,7 +4,7 @@
 \alias{coordinate.to.decimal}
 \title{convert a coordinate in degrees to decimal}
 \usage{
-degree.to.decimal(val)
+coordinate.to.decimal(val)
 }
 \arguments{
 \item{val}{a character string. A single latitude or longitude value to be transformed. Can include non-numeric character like the degree symbol, N-S-E-W wind directions,...}

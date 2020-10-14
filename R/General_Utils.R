@@ -107,7 +107,7 @@ find.dataset <- function(dataset, TermsList=c()){
 #' @author Maxime Sweetlove CC-BY 4.0 2019
 #' @family standardization functions
 #' @description Turns a latutude or longitude value in a degrees-minutes-seconds (DMS) format into a decimal value
-#' @usage degree.to.decimal(val)
+#' @usage coordinate.to.decimal(val)
 #' @param val a character string. A single latitude or longitude value to be transformed. Can include non-numeric character like the degree symbol, N-S-E-W wind directions,...
 #' @details N-S-W-E wind directions as well as degrees, minutes and seconds are recognized and turned into a numeric decimal coordinate value
 #' @return a numeric value
@@ -166,6 +166,11 @@ coordinate.to.decimal<-function(val){
   val <- gsub('\"', "SSS", val, fixed=TRUE)[[1]]
 
   val <- gsub('\342\200\263', "SSS", val, fixed=TRUE)[[1]]
+  
+  #case of x DDD y.z (no MMM, but has MMM value)
+  if(grepl("DDD", val) & !grepl("DDD$", val) & !grepl("MMM", val) & !grepl("SSS", val)){
+    val<-paste(val, "MMM", sep="")
+  }
 
   # now interpret the values
   if(grepl("DDD", val)){

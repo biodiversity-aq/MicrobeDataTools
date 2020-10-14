@@ -13,13 +13,14 @@ License: CC BY 4.0
 Encoding: UTF-8
 LazyData: true
 Depends:
-	xml2,
-	reshape2,
-	tidyr,
-	RecordLinkage,
-	mapview,
-	Orcs,
-	worrms,
-	rgbif,
-	stringr
+    xml2,
+    reshape2,
+    tidyr,
+    RecordLinkage,
+    mapview,
+    Orcs,
+    worrms,
+    rgbif,
+    stringr,
+    R (>= 2.10)
 RoxygenNote: 7.1.0

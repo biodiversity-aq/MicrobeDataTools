@@ -18,59 +18,60 @@
 #' In addition, there are also different libraries with terms of the MIxS and DarwinCore standards, term variants, synonyms and translations.
 #' 
 #' @section Classes:
-#' MIxS.metadata
-#' DwC.event
-#' DwC.occurrence
+#' MIxS.metadata  --  data formated in the MIxS standard
+#' DwC.event --  data formated in DarwinCore (DwC) with event core
+#' DwC.occurrence --  data formated in DwC with occurrence core
 #' 
 #' @section Libraries:
-#' TaxIDLib
-#' TermsLib
-#' TermsSyn
-#' TermsSyn_DwC
-#' MarsLib
-#' ENA_allowed_terms
+#' TermsLib  --  central library with mapped terms of DwC, MIxS and miscellaneous missing terms
+#' TermsSyn  --  library with synonyms for standard terms
+#' TermsSyn_DwC  --  library with synonyms for DwC terms
+#' TaxIDLib  --  non-exaustive library with some common INSDC taxon IDs
+#' ENA_allowed_terms  --  terms accepted by ENA-EMBL
+#' ENA_checklistAccession  --  checklist accessions accepted by ENA-EMBL
+#' ENA_geoloc  --  geographic locations names accepted by ENA-EMBL
+#' ENA_instrument --  instrument names accepted by ENA-EMBL
+#' get.boundingBox  --  make a bounding box from coordinates
 #' 
-#' @section Functions:
-#' check.valid.metadata.DwC
-#' check.valid.metadata.MIxS  
-#' combine.data
-#' combine.data.frame
-#' commonTax.to.NCBI.TaxID
-#' coordinate.to.decimal
-#' dataQC.completeTaxaNamesFromRegistery
-#' dataQC.dateCheck
-#' dataQC.DwC
-#' dataQC.DwC_general
-#' dataQC.eventStructure
-#' dataQC.findNames
-#' dataQC.generate.footprintWKT
-#' dataQC.guess.env_package.from.data
-#' dataQC.LatitudeLongitudeCheck
-#' dataQC.MIxS
-#' dataQC.taxaNames
-#' dataQC.TaxonListFromData
-#' dataQC.TermsCheck
-#' download.sequences.INSDC
-#' eMoF.to.wideTable
-#' ENA_checklistAccession
-#' ENA_geoloc
-#' ENA_instrument
-#' ENA_select
-#' ENA_strat
-#' FileNames.to.Table
-#' find.dataset
-#' get.BioProject.metadata.INSDC
-#' get.boundingBox
-#' get.ENAName
-#' get.insertSize
-#' get.sample.attributes.INSDC
-#' multi.warnings
-#' prep.metadata.ENA
-#' rename.sequenceFiles
-#' sync.metadata.sequenceFiles
-#' term.definition
-#' wideTab.to.hierarchicalTab
-#' wideTable.to.eMoF
+#' @section general functions:
+#' term.definition  --  get the definition of a term
+#' check.valid.metadata.DwC  --  validator function for the DwC.event and DwC.occurrence classes
+#' check.valid.metadata.MIxS  --  validator function for the MIxS.metadata class
+#' combine.data  --  combine data
+#' combine.data.frame  --  combine different dataframes
+#' commonTax.to.NCBI.TaxID   --  get the NCBI taxID of a taxon
+#' coordinate.to.decimal  --  convert any coordinate to decimal coordinates
+#' eMoF.to.wideTable  --  convert DwC eMoF (long format) to a wide table
+#' wideTable.to.eMoF  --  convert wide table to a long table formatted as eMoF
+#' wideTab.to.hierarchicalTab  --  convert a wide table to a hierarchical table
+#' find.dataset  --  find a column in a dataframe
+#' multi.warnings  --  collect warning messages while a function runs
+#'
+#' @section Quality Control functions:
+#' dataQC.completeTaxaNamesFromRegistery  --  get taxonomic information from WoRMS
+#' dataQC.dateCheck  --  standardize dates to ISO
+#' dataQC.DwC  --  automated check converting into DwC
+#' dataQC.DwC_general  --  automated check converting into DwC
+#' dataQC.eventStructure  --  create an hierarchical event structure
+#' dataQC.findNames  --  detect sample names in a file
+#' dataQC.generate.footprintWKT  --  generate a WKT from coordinates
+#' dataQC.guess.env_package.from.data  --  guess the MIxS environmental package
+#' dataQC.LatitudeLongitudeCheck  --  automated check for coordinates
+#' dataQC.MIxS  --  automated check converting into MIxS
+#' dataQC.taxaNames  --  clean out taxonomic names
+#' dataQC.TaxonListFromData  --  find taxonomic names for samples
+#' dataQC.TermsCheck  --  map a set of strings to standardized accepted terms
+#'
+#' @section upload-download omics data functions:
+#' download.sequences.INSDC  --  download sequences from INSDC to R
+#' FileNames.to.Table  --  get file names from a folder
+#' get.insertSize  --  get the sequence lengths from a file
+#' get.BioProject.metadata.INSDC  --  get metadata from INSDC (no API account required)
+#' get.ENAName  --  get the ENA-EMBL variant of a MIxS term
+#' get.sample.attributes.INSDC  --  get full list of metadata from INSDC (API account required)
+#' prep.metadata.ENA  --  format metadata compliant to ENA-EMBL requirements
+#' rename.sequenceFiles  --  automated renaming sequence files
+#' sync.metadata.sequenceFiles  --  check is samples in R correspond to sequence files
 #'
 #' @docType package
 #' @name MicrobeDataTools
@@ -79,7 +80,66 @@ NULL
 #' function to navigate through package
 #' @export
 MicrobeDataTools.help <- function(){
-  message(paste(ls("package:MicrobeDataTools"), collapse="\n"))
+  message(paste(sep="\n",
+  "MicrobeDataTools man pages:",
+  "MicrobeDataTools: A package with tools to format and standardize microbial omics datasets.",
+  "",
+  "Classes:",
+  "MIxS.metadata  --  data formated in the MIxS standard",
+  "DwC.event --  data formated in DarwinCore (DwC) with event core",
+  "DwC.occurrence --  data formated in DwC with occurrence core",
+  "",
+  "Libraries:",
+  "TermsLib  --  central library with mapped terms of DwC, MIxS and miscellaneous missing terms",
+  "TermsSyn  --  library with synonyms for standard terms",
+  "TermsSyn_DwC  --  library with synonyms for DwC terms",
+  "TaxIDLib  --  non-exaustive library with some common INSDC taxon IDs",
+  "ENA_allowed_terms  --  terms accepted by ENA-EMBL",
+  "ENA_checklistAccession  --  checklist accessions accepted by ENA-EMBL",
+  "ENA_geoloc  --  geographic locations names accepted by ENA-EMBL",
+  "ENA_instrument --  instrument names accepted by ENA-EMBL",
+  "get.boundingBox  --  make a bounding box from coordinates",
+  "",
+  "general functions:",
+  "term.definition  --  get the definition of a term",
+  "check.valid.metadata.DwC  --  validator function for the DwC.event and DwC.occurrence classes",
+  "check.valid.metadata.MIxS  --  validator function for the MIxS.metadata class",
+  "combine.data  --  combine data",
+  "combine.data.frame  --  combine different dataframes",
+  "commonTax.to.NCBI.TaxID   --  get the NCBI taxID of a taxon",
+  "coordinate.to.decimal  --  convert any coordinate to decimal coordinates",
+  "eMoF.to.wideTable  --  convert DwC eMoF (long format) to a wide table",
+  "wideTable.to.eMoF  --  convert wide table to a long table formatted as eMoF",
+  "wideTab.to.hierarchicalTab  --  convert a wide table to a hierarchical table",
+  "find.dataset  --  find a column in a dataframe",
+  "multi.warnings  --  collect warning messages while a function runs",
+  "",
+  "Quality Control functions:",
+  "dataQC.completeTaxaNamesFromRegistery  --  get taxonomic information from WoRMS",
+  "dataQC.dateCheck  --  standardize dates to ISO",
+  "dataQC.DwC  --  automated check converting into DwC",
+  "dataQC.DwC_general  --  automated check converting into DwC",
+  "dataQC.eventStructure  --  create an hierarchical event structure",
+  "dataQC.findNames  --  detect sample names in a file",
+  "dataQC.generate.footprintWKT  --  generate a WKT from coordinates",
+  "dataQC.guess.env_package.from.data  --  guess the MIxS environmental package",
+  "dataQC.LatitudeLongitudeCheck  --  automated check for coordinates",
+  "dataQC.MIxS  --  automated check converting into MIxS",
+  "dataQC.taxaNames  --  clean out taxonomic names",
+  "dataQC.TaxonListFromData  --  find taxonomic names for samples",
+  "dataQC.TermsCheck  --  map a set of strings to standardized accepted terms",
+  "",
+  "upload-download omics data functions:",
+  "download.sequences.INSDC  --  download sequences from INSDC to R",
+  "FileNames.to.Table  --  get file names from a folder",
+  "get.insertSize  --  get the sequence lengths from a file",
+  "get.BioProject.metadata.INSDC  --  get metadata from INSDC (no API account required)",
+  "get.ENAName  --  get the ENA-EMBL variant of a MIxS term",
+  "get.sample.attributes.INSDC  --  get full list of metadata from INSDC (API account required)",
+  "prep.metadata.ENA  --  format metadata compliant to ENA-EMBL requirements",
+  "rename.sequenceFiles  --  automated renaming sequence files",
+  "sync.metadata.sequenceFiles  --  check is samples in R correspond to sequence files"
+  ))
 }
 
 #' Find the MIxS or DarwinCore standard term and definition of a variable

@@ -16,7 +16,7 @@
 #' @param dataset dataframe. The dataset where the date column should be found
 #' @param date.colnames character vector. a list of potential names for the column with the date. e.g. c("date", "Date", "collection date")
 #' @details The date column is found based on a user-provided list of possible names to look for (data.colnames argument). If a columnname is found that corresponds to a term in the list, the dates will be convered to the YYYY-MM-DD format, if the original format can be recognized.
-#' @return a list of length 2, with "$values" a dataframe with the same dimentions as the dataset argument, and "$warningmessages" a vector with potential warning messages as character strings.
+#' @return a list of length 2, with "$values" a vactor with the same number of rows as the dataset argument containing the corrected date values, and "$warningmessages" a vector with potential warning messages as character strings.
 #' @export
 dataQC.dateCheck <- function(dataset, date.colnames=c("date", "Date", "collection_date")){
 
@@ -293,7 +293,7 @@ dataQC.guess.env_package.from.data <- function(dataset, pckge.colnames=c("env_pa
 #' @author Maxime Sweetlove ccBY 4.0 2020
 #' @family quality control functions
 #' @description checks a set of terms (e.g. columnnames) to a Standard, and flags inconsistencies, gives solutions if possible.
-#' @usage Check.terms(observed, exp.standard="MIxS", exp.section=NA, fuzzy.match=TRUE, out.type="full")
+#' @usage dataQC.TermsCheck(observed=NA, exp.standard="MIxS", exp.section=NA, fuzzy.match=TRUE,out.type="full")
 #' @param observed character vector. The terms to be checked
 #' @param exp.standard character. The expected standard to which he terms should comply. Either MIxS (Minimum Information on any x sequence), DwC (DarwinCore), INSDC (International Nucleotide Sequence Database Consortium).
 #' @param exp.section character. Optionally an specific section standard where the terms should come from. When exp.standard is MIxS, the allowed sections are: core,  air, built_environment, host_associated, human_associated, human_gut, human_oral, human_skin, human_vaginal, microbial_mat_biofilm, miscellaneous_natural_or_artificial_environment, plant_associated, sediment, soil, wastewater_sludge, water. When exp.standard is DwC, the allowed sections are: event, occurence, emof
@@ -437,11 +437,11 @@ dataQC.generate.footprintWKT <- function(dataset, NA.val=NA){
   }
   footprintWKT_vec <- c()
   if("parentEventID" %in% colnames(dataset)){
-    for(ev in dataset$eventID){
-      if(!ev %in% dataset$parentEventID){
+    for(evi in 1:nrow(dataset)){
+      if(!dataset[evi,]$eventID %in% dataset$parentEventID){
         # in this case the event is at the lowest level, assume it is a point
-        lat<-dataset[dataset$eventID==ev,]$decimalLatitude
-        lon<-dataset[dataset$eventID==ev,]$decimalLongitude
+        lat<-dataset[evi,]$decimalLatitude
+        lon<-dataset[evi,]$decimalLongitude
         if(!is.na(lat) & !is.na(lon) & lat!="" & lon!=""){
           footprintWKT_vec <- c(footprintWKT_vec, paste("POINT(", as.character(lon), " ", as.character(lat), ")", sep=""))
         } else{
@@ -449,7 +449,7 @@ dataQC.generate.footprintWKT <- function(dataset, NA.val=NA){
         }
       }else{
         # this event is the parent of one or more child events. we need to find all the coordinates of the lowest events under this parent
-        child_ev <- dataset[dataset$parentEventID == ev,]$eventID #the direct descendants
+        child_ev <- dataset[dataset$parentEventID == dataset[evi,]$eventID,]$eventID #the direct descendants
         doneList<-c()
         n_added <- length(child_ev)
         while(! n_added == 0){ #loop through the events to add all the other descendants
