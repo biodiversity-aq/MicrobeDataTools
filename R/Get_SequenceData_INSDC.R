@@ -205,6 +205,7 @@ download.sequences.INSDC <- function(BioPrj = c(), destination.path = NA, apiKey
     tmpFile <- tempfile()
     download.file(ftp_url, destfile = tmpFile, method="auto", quiet = TRUE)
     ftps <- read.table(tmpFile, header=TRUE)
+    rownames(ftps) <- ftps$run_accession
     ftps <- ftps[ftps$run_accession[order(RawMetadata$Run)],]
     RawMetadata$ftp <- ftps$fastq_ftp
     file.remove(tmpFile)
@@ -221,11 +222,12 @@ download.sequences.INSDC <- function(BioPrj = c(), destination.path = NA, apiKey
       env_data <- env_data[order(row.names(env_data)),]
       MetaData <- cbind(RawMetadata, env_data)
 
-      if(nrow(metadata_all)>0){
-        metadata_all <- process.metadata(metadata=MetaData, add_to = metadata_all, strict.MIxS = FALSE, ask.input = FALSE)
-      } else{
-        metadata_all <- process.metadata(metadata=MetaData, strict.MIxS = FALSE, ask.input = FALSE)
-      }
+      # uses old code, disfunctional now
+      #if(nrow(metadata_all)>0){
+      #  metadata_all <- process.metadata(metadata=MetaData, add_to = metadata_all, strict.MIxS = FALSE, ask.input = FALSE)
+      #} else{
+      #  metadata_all <- process.metadata(metadata=MetaData, strict.MIxS = FALSE, ask.input = FALSE)
+      #}
     }
 
     ### 2.3. Downloading the sequence data from SRA
