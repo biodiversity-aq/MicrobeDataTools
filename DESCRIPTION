@@ -24,4 +24,4 @@ Depends:
     stringr,
     R (>= 2.10)
 RoxygenNote: 7.1.0
-Remotes: R_REMOTES_NO_ERRORS_FROM_WARNINGS="false"
+Remotes: R_REMOTES_NO_ERRORS_FROM_WARNINGS="true"
