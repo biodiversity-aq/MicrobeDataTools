@@ -199,11 +199,9 @@ download.sequences.INSDC <- function(BioPrj = c(), destination.path = NA, apiKey
     }
 
 
-
-
     ### 2.2 add the FTP path to download the sequences
     ftp_url <- paste("https://www.ebi.ac.uk/ena/data/warehouse/filereport?accession=", BP,
-                     "&result=read_run&fields=run_accession,fastq_ftp&download=txt", sep="")
+                     "&result=read_run&fields=run_accession,fastq_ftp", sep="")
     tmpFile <- tempfile()
     download.file(ftp_url, destfile = tmpFile, method="auto", quiet = TRUE)
     ftps <- read.table(tmpFile, header=TRUE)
