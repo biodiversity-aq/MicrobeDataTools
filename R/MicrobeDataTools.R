@@ -22,6 +22,11 @@
 #' DwC.event --  data formated in DarwinCore (DwC) with event core
 #' DwC.occurrence --  data formated in DwC with occurrence core
 #' 
+#' @section Methods for classes:
+#' write.MIxS  --  write MIxS.metadata to a CSV file
+#' check.valid.metadata.DwC  --  validator function for the DwC.event and DwC.occurrence classes
+#' check.valid.metadata.MIxS  --  validator function for the MIxS.metadata class
+#' 
 #' @section Libraries:
 #' TermsLib  --  central library with mapped terms of DwC, MIxS and miscellaneous missing terms
 #' TermsSyn  --  library with synonyms for standard terms
@@ -31,12 +36,9 @@
 #' ENA_checklistAccession  --  checklist accessions accepted by ENA-EMBL
 #' ENA_geoloc  --  geographic locations names accepted by ENA-EMBL
 #' ENA_instrument --  instrument names accepted by ENA-EMBL
-#' get.boundingBox  --  make a bounding box from coordinates
 #' 
 #' @section general functions:
 #' term.definition  --  get the definition of a term
-#' check.valid.metadata.DwC  --  validator function for the DwC.event and DwC.occurrence classes
-#' check.valid.metadata.MIxS  --  validator function for the MIxS.metadata class
 #' combine.data  --  combine data
 #' combine.data.frame  --  combine different dataframes
 #' commonTax.to.NCBI.TaxID   --  get the NCBI taxID of a taxon
@@ -45,6 +47,7 @@
 #' wideTable.to.eMoF  --  convert wide table to a long table formatted as eMoF
 #' wideTab.to.hierarchicalTab  --  convert a wide table to a hierarchical table
 #' find.dataset  --  find a column in a dataframe
+#' get.boundingBox  --  make a bounding box from coordinates
 #' multi.warnings  --  collect warning messages while a function runs
 #'
 #' @section Quality Control functions:
@@ -89,6 +92,11 @@ MicrobeDataTools.help <- function(){
   "DwC.event --  data formated in DarwinCore (DwC) with event core",
   "DwC.occurrence --  data formated in DwC with occurrence core",
   "",
+  "Methods:",
+  "write.MIxS  --  write MIxS.metadata to a CSV file",
+  "check.valid.metadata.DwC  --  validator function for the DwC.event and DwC.occurrence classes",
+  "check.valid.metadata.MIxS  --  validator function for the MIxS.metadata class",
+  "",
   "Libraries:",
   "TermsLib  --  central library with mapped terms of DwC, MIxS and miscellaneous missing terms",
   "TermsSyn  --  library with synonyms for standard terms",
@@ -98,12 +106,9 @@ MicrobeDataTools.help <- function(){
   "ENA_checklistAccession  --  checklist accessions accepted by ENA-EMBL",
   "ENA_geoloc  --  geographic locations names accepted by ENA-EMBL",
   "ENA_instrument --  instrument names accepted by ENA-EMBL",
-  "get.boundingBox  --  make a bounding box from coordinates",
   "",
   "general functions:",
   "term.definition  --  get the definition of a term",
-  "check.valid.metadata.DwC  --  validator function for the DwC.event and DwC.occurrence classes",
-  "check.valid.metadata.MIxS  --  validator function for the MIxS.metadata class",
   "combine.data  --  combine data",
   "combine.data.frame  --  combine different dataframes",
   "commonTax.to.NCBI.TaxID   --  get the NCBI taxID of a taxon",
@@ -112,6 +117,7 @@ MicrobeDataTools.help <- function(){
   "wideTable.to.eMoF  --  convert wide table to a long table formatted as eMoF",
   "wideTab.to.hierarchicalTab  --  convert a wide table to a hierarchical table",
   "find.dataset  --  find a column in a dataframe",
+  "get.boundingBox  --  make a bounding box from coordinates",
   "multi.warnings  --  collect warning messages while a function runs",
   "",
   "Quality Control functions:",

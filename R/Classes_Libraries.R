@@ -213,3 +213,24 @@ check.valid.metadata.DwC <- function(d){
   }
   return(valid)
 }
+
+
+
+#' Data Output: write a MIxS.metadata class object to a CSV file
+#' @author Maxime Sweetlove ccBY 4.0 2020
+#' @description write a MIxS.metadata class object to a CSV file
+#' @usage write.MIxS(x, file="")
+#' @param x the MIxS.metadata class object to be written.
+#' @param file either a character string naming a file or a connection open for writing. "" indicates output to the console.
+#' @export
+write.MIxS <- function(x, file = ""){
+  if(!check.valid.MIxS.metadata(x)){
+    stop("Input needs to be a MIxS.metadata class object.")
+  }
+  out.data <- rbind(x@section, x@units, x@data)
+  rownames(out.data)[1]<-"section"
+  rownames(out.data)[2]<-"units"
+  write.csv(out.data, file=file, quote=FALSE, 
+            row.names = TRUE, na = "")
+  
+}
